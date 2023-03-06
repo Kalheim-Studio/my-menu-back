@@ -1,0 +1,28 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2021": true
+  },
+  "extends": ["standard-with-typescript", "prettier"],
+  "overrides": [],
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "ignorePatterns": ["**/*.json"],
+  "rules": {
+    "indent": "error",
+    "semi": ["error", "always"],
+    "quotes": ["error", "double"],
+    "max-len": ["error", { "code": 80 }],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1,
+        "maxBOF": 0,
+        "maxEOF": 0
+      }
+    ],
+    "eol-last": ["error", "always"]
+  }
+}
