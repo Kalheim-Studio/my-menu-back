@@ -1,11 +1,11 @@
-const http = require("http");
-const app = require("./app");
+import http from "http";
+import app from "./app";
 require("dotenv").config();
 
 // Create server
 const server = http.createServer(app);
 // Execution port environment variable
-const PORT = parseInt(process.env.PORT) || 3000;
+const PORT = parseInt(process.env.PORT || "8080");
 
 // Server start
 server.listen(PORT);
