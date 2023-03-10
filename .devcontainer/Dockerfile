@@ -1,3 +1,1 @@
 FROM node:18.14.2
-
-EXPOSE 8080

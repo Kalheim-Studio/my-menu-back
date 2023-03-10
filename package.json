@@ -4,7 +4,7 @@
   "description": "MyMenu back app",
   "main": "server.js",
   "scripts": {
-    "nodemon": "nodemon --exec ts-node src/server.ts",
+    "nodemon": "nodemon --exec ts-node src/server.ts -L",
     "dev": "ts-node src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier . --write",
