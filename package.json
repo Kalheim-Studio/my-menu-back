@@ -6,7 +6,7 @@
   "scripts": {
     "nodemon": "nodemon --exec ts-node src/server.ts -L",
     "dev": "ts-node src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"No test yet\"",
     "format": "prettier . --write",
     "lint": "eslint \"**/*\"",
     "build": ""
