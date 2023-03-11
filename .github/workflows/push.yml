@@ -1,0 +1,45 @@
+name: GitHub Ci-CD Test Project
+run-name: ${{ github.actor }} has has pushed on branch main ${{ github.ref }}.
+on: 
+  push:
+    branches:
+      - main
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Starting pipeline with a ${{ github.event_name }} event."
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - run: echo "Code has been checkout."
+      - name: Use node v18.14.1
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18.14.1"
+      - run: echo "Use node version 18.12.1"
+      - name: Running install
+        run: |
+          echo "Start dependencies installation"
+          npm install
+      - run: echo "Dependencies has been installed"
+      - name: Auditing projects
+        run: |
+          echo "Start auditing projects"
+          npm audit
+      - run: echo "Audit ok."
+      - name: Running lint
+        run: |
+          echo "Start running lint"
+          npm run lint
+      - run: echo "Lint ok."
+      - name: Running Tests
+        run: |
+          echo "Start running tests"
+          npm run test
+      - run: echo "Tests ok."
+      - name: Building projects
+        run: |
+          echo "Start building projects"
+          npm run build
+      - run: echo "This job has ended with status ${{ job.status }}."
+      
