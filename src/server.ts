@@ -1,5 +1,5 @@
 import http from "http";
-import app from "./app";
+import app from "./app/app";
 import dotenv from "dotenv";
 
 // Initializing environnment
@@ -19,6 +19,4 @@ server.on("listening", () => {
 });
 
 // On server error
-server.on("error", (err) =>
-    console.error("An error occured at server start.", err)
-);
+server.on("error", (err) => console.error("An error occured at server start.", err));
