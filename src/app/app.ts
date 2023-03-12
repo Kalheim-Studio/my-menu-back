@@ -9,8 +9,6 @@ app.use(cors());
 app.use(express.json());
 
 app.use(logger("dev"));
-app.use("/", (req, res) =>
-    res.status(200).json({ answer: "response", body: req.body ? req.body : "none" })
-);
+app.use("/", (req, res) => res.status(200).json({ answer: "response!" }));
 
 export default app;

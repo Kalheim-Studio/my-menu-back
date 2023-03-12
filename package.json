@@ -6,7 +6,7 @@
   "scripts": {
     "nodemon": "nodemon --exec ts-node src/server.ts -L",
     "dev": "ts-node src/server.ts",
-    "test": "echo \"No test yet\"",
+    "test": "jest",
     "format": "prettier . --write",
     "lint": "eslint \"**/*\"",
     "build": ""
@@ -25,13 +25,20 @@
     "socket.io": "^4.6.1"
   },
   "devDependencies": {
+    "@jest/globals": "^29.5.0",
     "@types/express": "^4.17.17",
+    "@types/jest": "^29.4.0",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.14.6",
+    "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
     "@typescript-eslint/parser": "^5.54.1",
     "eslint": "^8.35.0",
+    "jest": "^29.5.0",
     "nodemon": "^2.0.21",
+    "prettier": "^2.8.4",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
   }
