@@ -1,5 +1,7 @@
 # Ignore node_module
 node_modules
+# Ignore test coverage
+coverage
 
 # Ignore .env file
 .env
