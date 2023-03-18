@@ -25,7 +25,7 @@ const io = new Server(server, {
 
 // Connection to database
 mongoose
-.connect(String(process.env.DATABASE_URL))
+    .connect(String(process.env.DATABASE_URL))
     .then(() => console.log("Connection to database. OK."))
     .catch((err) => console.log("Error on database connection.", err));
 
