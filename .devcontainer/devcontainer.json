@@ -1,4 +1,4 @@
 {
-	"name": "My-Menu-back",	
-	"image": "node:18"
+  "name": "My-Menu-back",
+  "dockerFile": "./Dockerfile"
 }

@@ -3,6 +3,8 @@ import app from "./app/app";
 import dotenv from "dotenv";
 import { Server } from "socket.io";
 import socket from "./socket/socket";
+import mongoose from "mongoose";
+
 // Initializing environnment
 dotenv.config();
 
@@ -20,6 +22,12 @@ const io = new Server(server, {
         origin: "*",
     },
 });
+
+// Connection to database
+mongoose
+    .connect(String(process.env.DATABASE_URL))
+    .then(() => console.log("Connection to database. OK."))
+    .catch((err) => console.log("Error on database connection.", err));
 
 // On server start
 server.on("listening", () => {
