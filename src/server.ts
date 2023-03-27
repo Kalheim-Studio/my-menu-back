@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { Server } from "socket.io";
 import socket from "./socket/socket";
 import mongoose from "mongoose";
+import { MongoClient, ServerApiVersion } from "mongodb";
 
 // Initializing environnment
 dotenv.config();
@@ -25,8 +26,8 @@ const io = new Server(server, {
 
 // Connection to database
 mongoose
-    .connect(String(process.env.DATABASE_URL))
-    .then(() => console.log("Connection to database. OK."))
+    .connect(String(process.env.DATABASE_URI))
+    .then(() => console.log("Connection to database: OK."))
     .catch((err) => console.log("Error on database connection.", err));
 
 // On server start

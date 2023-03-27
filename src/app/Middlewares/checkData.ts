@@ -1,9 +1,77 @@
 import type { Request, Response, NextFunction } from "express";
 
 // Checking Data
-const checkData = (req: Request, res: Response, next: NextFunction) => {
+function checkData(req: Request, res: Response, next: NextFunction) {
     console.log("Check Data");
-    next();
-};
+    // Parse req.body for checking data.
+    const isValidData = parseBody(req.body, req);
+    // Conitnue processing request if data are valid
+    // console.log(req.body);
+    if (isValidData) next();
+    // If not send error
+    else res.status(400).send("Error in data");
+}
+
+// Parsing body
+function parseBody(body: object, req: Request): boolean {
+    let isValidData = true;
+    // Parsing body
+    for (const [key, value] of Object.entries(body)) {
+    // Parsing sub object
+        if (typeof value === "object") isValidData &&= parseBody(value, req);
+        // Checking each data
+        else isValidData &&= validData(key, value, req);
+    }
+    return isValidData;
+}
+
+function validData(data: string, value: any, req: Request): boolean {
+    let isValidData = true;
+    let regExCheck: RegExpMatchArray | null;
+
+    // Checking data field
+    switch (data) {
+    case "email":
+        // Checking mail regex
+        regExCheck = value.match(/^[\w-\\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
+        if (!regExCheck) isValidData = false;
+        break;
+    case "password":
+        // Checking password regex
+        // 8 char min
+        // one upper case
+        // three digits
+        // one special caracter
+        regExCheck = value.match(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9].*[0-9].*[0-9])(?=.*[@[\]^_!"#$%&'()*+,-./:;{}<>=|~?]).{8,}$/g
+        );
+        if (!regExCheck) isValidData = false;
+        break;
+    // Data fields that have to be a string
+    case "firstname":
+    case "lastname":
+    case "name":
+    case "phone":
+    case "address":
+    case "postalCode":
+    case "city":
+        // Is string
+        if (typeof value !== "string") isValidData = false;
+        req.body[data] = value + "check";
+        break;
+    // All other fields are not allowed
+    default:
+        console.log("Other data: ", data, typeof value);
+        isValidData = false;
+        break;
+    }
+
+    return isValidData;
+}
 
 export default checkData;
+
+//A-Z
+//a-z
+//0-9
+//[a-z0-9@\[\]^_!"#$%&'()*+,-.\/:;{}<>=|~?]{8,}
