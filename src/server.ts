@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 import { Server } from "socket.io";
 import socket from "./socket/socket";
 import mongoose from "mongoose";
-import { MongoClient, ServerApiVersion } from "mongodb";
 
 // Initializing environnment
 dotenv.config();

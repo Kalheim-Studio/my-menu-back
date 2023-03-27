@@ -9,7 +9,7 @@ function checkData(req: Request, res: Response, next: NextFunction) {
     // console.log(req.body);
     if (isValidData) next();
     // If not send error
-    else res.status(400).send("Error in data");
+    else res.status(400).send("Error: Data are not valid.");
 }
 
 // Parsing body
@@ -47,16 +47,24 @@ function validData(data: string, value: any, req: Request): boolean {
         );
         if (!regExCheck) isValidData = false;
         break;
-    // Data fields that have to be a string
+    case "phone":
+        // Phone number french format begon 0 or (+33) + 9 digits
+        regExCheck = value.match(/^(0|\(\+33\))[0-9]{9}/g);
+        if (!regExCheck) isValidData = false;
+        break;
+    case "postalCode":
+        // Check Postal Code french format with digits
+        regExCheck = value.match(/^[0-9]{5}/g);
+        if (!regExCheck) isValidData = false;
+        break;
+    // Data fields that have to be a non void string
     case "firstname":
     case "lastname":
     case "name":
-    case "phone":
     case "address":
-    case "postalCode":
     case "city":
-        // Is string
-        if (typeof value !== "string") isValidData = false;
+        // Is string and non void string
+        if (typeof value !== "string" || value.length === 0) isValidData = false;
         req.body[data] = value + "check";
         break;
     // All other fields are not allowed
@@ -70,8 +78,3 @@ function validData(data: string, value: any, req: Request): boolean {
 }
 
 export default checkData;
-
-//A-Z
-//a-z
-//0-9
-//[a-z0-9@\[\]^_!"#$%&'()*+,-.\/:;{}<>=|~?]{8,}
