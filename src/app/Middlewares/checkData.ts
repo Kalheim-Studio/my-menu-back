@@ -3,29 +3,55 @@ import type { Request, Response, NextFunction } from "express";
 // Checking Data
 function checkData(req: Request, res: Response, next: NextFunction) {
     console.log("Check Data");
+    
+    const requiredField: string[] = [];
+    
+    // Setting required field
+    switch(req.originalUrl){
+        case "/user/register":
+            requiredField.push("firstname", "lastname", "email", "password", "restaurant", "name", "address", "postalCode", "city", "phone", "email");
+            break;
+        default:
+            break;
+    }
+
     // Parse req.body for checking data.
-    const isValidData = parseBody(req.body, req);
-    // Conitnue processing request if data are valid
-    // console.log(req.body);
+    let isValidData = parseBody(req.body, req, requiredField);
+    
+    console.log(requiredField);
+
+
+    if(requiredField.length > 0)
+        isValidData = false;
+
+    // Continue processing request if data are valid
     if (isValidData) next();
     // If not send error
     else res.status(400).send("Error: Data are not valid.");
 }
 
 // Parsing body
-function parseBody(body: object, req: Request): boolean {
+function parseBody(body: object, req: Request, requiredField: string[]): boolean {
     let isValidData = true;
     // Parsing body
     for (const [key, value] of Object.entries(body)) {
-    // Parsing sub object
-        if (typeof value === "object") isValidData &&= parseBody(value, req);
+    // If sub object
+        if (typeof value === "object"){
+            // Removing data from requiredField if present in
+            const index = requiredField.indexOf(key);
+            if(index >= 0)
+                requiredField.splice(index, 1);
+            // Parsing sub object
+            isValidData &&= parseBody(value, req, requiredField);
+         }
         // Checking each data
-        else isValidData &&= validData(key, value, req);
+        else isValidData &&= validData(key, value, req, requiredField);
     }
+
     return isValidData;
 }
 
-function validData(data: string, value: any, req: Request): boolean {
+function validData(data: string, value: string | number | boolean | object, req: Request, requiredField: string[]): boolean {
     let isValidData = true;
     let regExCheck: RegExpMatchArray | null;
 
@@ -33,7 +59,7 @@ function validData(data: string, value: any, req: Request): boolean {
     switch (data) {
     case "email":
         // Checking mail regex
-        regExCheck = value.match(/^[\w-\\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
+        regExCheck = String(value).match(/^[\w-\\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
         if (!regExCheck) isValidData = false;
         break;
     case "password":
@@ -42,19 +68,19 @@ function validData(data: string, value: any, req: Request): boolean {
         // one upper case
         // three digits
         // one special caracter
-        regExCheck = value.match(
+        regExCheck = String(value).match(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9].*[0-9].*[0-9])(?=.*[@[\]^_!"#$%&'()*+,-./:;{}<>=|~?]).{8,}$/g
         );
         if (!regExCheck) isValidData = false;
         break;
     case "phone":
         // Phone number french format begon 0 or (+33) + 9 digits
-        regExCheck = value.match(/^(0|\(\+33\))[0-9]{9}/g);
+        regExCheck = String(value).match(/^(0|\(\+33\))[0-9]{9}/g);
         if (!regExCheck) isValidData = false;
         break;
     case "postalCode":
         // Check Postal Code french format with digits
-        regExCheck = value.match(/^[0-9]{5}/g);
+        regExCheck = String(value).match(/^[0-9]{5}/g);
         if (!regExCheck) isValidData = false;
         break;
     // Data fields that have to be a non void string
@@ -73,6 +99,12 @@ function validData(data: string, value: any, req: Request): boolean {
         isValidData = false;
         break;
     }
+
+    // Removing data from requiredField if present in
+    const index = requiredField.indexOf(data);
+
+    if(index >= 0)
+        requiredField.splice(index, 1);
 
     return isValidData;
 }

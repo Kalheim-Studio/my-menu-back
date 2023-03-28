@@ -36,7 +36,7 @@ describe("checkData middleware test", () => {
     });
 
     // Wrong firstname
-    it("Should have bad firstname", () => {
+    it("Should send error if bad firstname", () => {
         req.body.firstname = 1;
 
         checkData(req, res, next);
@@ -46,7 +46,7 @@ describe("checkData middleware test", () => {
     });
 
     // Wrong lastname
-    it("Should have bad lastname", () => {
+    it("Should send error if bad lastname", () => {
         req.body.lastname = 1;
 
         checkData(req, res, next);
@@ -56,7 +56,7 @@ describe("checkData middleware test", () => {
     });
 
     // Wrong email
-    it("Should have bad email", () => {
+    it("Should send error if bad email", () => {
         req.body.email = "john.doemock.com";
 
         checkData(req, res, next);
@@ -66,7 +66,7 @@ describe("checkData middleware test", () => {
     });
 
     // Wrong password
-    it("Should have bad password", () => {
+    it("Should send error if bad password", () => {
         req.body.email = "123";
 
         checkData(req, res, next);
@@ -76,7 +76,7 @@ describe("checkData middleware test", () => {
     });
 
     // Wrong name
-    it("Should have bad name", () => {
+    it("Should send error if bad name", () => {
         req.body.restaurant.name = 1;
 
         checkData(req, res, next);
@@ -86,7 +86,7 @@ describe("checkData middleware test", () => {
     });
 
     // Wrong address
-    it("Should have bad address", () => {
+    it("Should send error if bad address", () => {
         req.body.restaurant.address = 1;
 
         checkData(req, res, next);
@@ -96,7 +96,7 @@ describe("checkData middleware test", () => {
     });
 
     // Wrong postal code
-    it("Should have bad postal code", () => {
+    it("Should send error if bad postal code", () => {
         req.body.restaurant.postalCode = "0611";
 
         checkData(req, res, next);
@@ -106,7 +106,7 @@ describe("checkData middleware test", () => {
     });
 
     // Wrong city
-    it("Should have bad city", () => {
+    it("Should send error if bad city", () => {
         req.body.restaurant.city = 1;
         checkData(req, res, next);
 
@@ -115,7 +115,7 @@ describe("checkData middleware test", () => {
     });
 
     // Wrong phone
-    it("Should have bad phone", () => {
+    it("Should send error if bad phone", () => {
         req.body.restaurant.email = "1123456789";
 
         checkData(req, res, next);
@@ -125,7 +125,7 @@ describe("checkData middleware test", () => {
     });
 
     // Non allowed data field
-    it("Should have bad phone", () => {
+    it("Should send error if additionnal", () => {
         req.body.additionalData = "Additionnal data";
 
         checkData(req, res, next);

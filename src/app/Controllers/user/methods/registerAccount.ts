@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import Mongoose from "mongoose";
 import User from "../../../Models/User";
 import Restaurant from "../../../Models/Restaurant";
 import bcrypt from "bcrypt";
@@ -26,15 +27,23 @@ const registerAccount = async (req: Request, res: Response) => {
         role: "restaurater",
     });
 
-    try {
-        await newUser.save();
-        await newRestaurant.save();
-        res.status(201).send("Register account : WIP");
-    } catch (err) {
-        console.log("Register account error");
-        console.log(err);
-        res.status(400).send("Error while registering data");
-    }
+    newUser.save()
+        .then((userRes: Mongoose.Document) => {
+            console.log("New user saved");
+            newRestaurant.save()
+                .then((restaurantRes: Mongoose.Document) => {
+                    console.log("New Restaurant saved");
+                    res.status(201).send("Register account : WIP");
+                })
+                .catch(err => {
+                    res.status(400).send("Error while registering data");
+                });
+        })
+        .catch((err: Mongoose.Error) => {
+            console.log(err);
+            res.status(400).send("Error while registering data");
+        });
+
     // Send mail
     // TO DO
 };
