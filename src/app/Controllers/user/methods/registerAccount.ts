@@ -27,23 +27,23 @@ const registerAccount = async (req: Request, res: Response) => {
         role: "restaurater",
     });
 
-    newUser.save()
-        .then((userRes: Mongoose.Document) => {
-            console.log("New user saved");
-            newRestaurant.save()
-                .then((restaurantRes: Mongoose.Document) => {
-                    console.log("New Restaurant saved");
-                    res.status(201).send("Register account : WIP");
-                })
-                .catch(err => {
-                    res.status(400).send("Error while registering data");
-                });
-        })
-        .catch((err: Mongoose.Error) => {
-            console.log(err);
-            res.status(400).send("Error while registering data");
-        });
-
+    // newUser.save()
+    //     .then((userRes: Mongoose.Document) => {
+    //         console.log("New user saved");
+    //         newRestaurant.save()
+    //             .then((restaurantRes: Mongoose.Document) => {
+    //                 console.log("New Restaurant saved");
+    //                 res.status(201).send("Register account : WIP");
+    //             })
+    //             .catch(err => {
+    //                 res.status(400).send("Error while registering data");
+    //             });
+    //     })
+    //     .catch((err: Mongoose.Error) => {
+    //         console.log(err);
+    //         res.status(400).send("Error while registering data");
+    //     });
+    res.status(200).send("OK");
     // Send mail
     // TO DO
 };

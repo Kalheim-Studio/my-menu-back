@@ -1,28 +1,26 @@
 import type { Request, Response, NextFunction } from "express";
+import requiredFields from "./requiredFields";
 
 // Checking Data
 function checkData(req: Request, res: Response, next: NextFunction) {
     console.log("Check Data");
-    
-    const requiredField: string[] = [];
-    
-    // Setting required field
-    switch(req.originalUrl){
-        case "/user/register":
-            requiredField.push("firstname", "lastname", "email", "password", "restaurant", "name", "address", "postalCode", "city", "phone", "email");
-            break;
-        default:
-            break;
+
+    const requiredFieldsToCheck: string[] = [];
+
+    // Setting required fields
+    switch (req.originalUrl) {
+    case "/user/register":
+        requiredFieldsToCheck.push(...requiredFields.user);
+        break;
+    default:
+        break;
     }
 
     // Parse req.body for checking data.
-    let isValidData = parseBody(req.body, req, requiredField);
-    
-    console.log(requiredField);
+    let isValidData = parseBody(req.body, req, requiredFieldsToCheck);
 
-
-    if(requiredField.length > 0)
-        isValidData = false;
+    // Check if a field is missing
+    if (requiredFieldsToCheck.length > 0) isValidData = false;
 
     // Continue processing request if data are valid
     if (isValidData) next();
@@ -36,14 +34,13 @@ function parseBody(body: object, req: Request, requiredField: string[]): boolean
     // Parsing body
     for (const [key, value] of Object.entries(body)) {
     // If sub object
-        if (typeof value === "object"){
+        if (typeof value === "object") {
             // Removing data from requiredField if present in
             const index = requiredField.indexOf(key);
-            if(index >= 0)
-                requiredField.splice(index, 1);
+            if (index >= 0) requiredField.splice(index, 1);
             // Parsing sub object
             isValidData &&= parseBody(value, req, requiredField);
-         }
+        }
         // Checking each data
         else isValidData &&= validData(key, value, req, requiredField);
     }
@@ -51,7 +48,12 @@ function parseBody(body: object, req: Request, requiredField: string[]): boolean
     return isValidData;
 }
 
-function validData(data: string, value: string | number | boolean | object, req: Request, requiredField: string[]): boolean {
+function validData(
+    data: string,
+    value: string | number | boolean | object,
+    req: Request,
+    requiredField: string[]
+): boolean {
     let isValidData = true;
     let regExCheck: RegExpMatchArray | null;
 
@@ -103,8 +105,7 @@ function validData(data: string, value: string | number | boolean | object, req:
     // Removing data from requiredField if present in
     const index = requiredField.indexOf(data);
 
-    if(index >= 0)
-        requiredField.splice(index, 1);
+    if (index >= 0) requiredField.splice(index, 1);
 
     return isValidData;
 }

@@ -1,7 +1,7 @@
 import express from "express";
 import card from "../Controllers/card/card";
-import checkData from "../Middlewares/checkData";
-import checkAuth from "../Middlewares/checkAuth";
+import checkData from "../Middlewares/checkData/checkData";
+import checkAuth from "../Middlewares/checkAuth/checkAuth";
 
 const cardRouter = express.Router();
 

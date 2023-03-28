@@ -124,9 +124,35 @@ describe("checkData middleware test", () => {
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
-    // Non allowed data field
+    // Not allowed data field
     it("Should send error if additionnal", () => {
         req.body.additionalData = "Additionnal data";
+
+        checkData(req, res, next);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.send).toHaveBeenCalledWith(errorMessage);
+    });
+
+    // Missing dataField
+    it("Should send error if additionnal", () => {
+    // firstname missing
+        req.body = {
+            lastname: "Doe",
+            email: "john.doe@mock.com",
+            password: "Abcdefgh1234!",
+            restaurant: {
+                name: "John's Dinner",
+                address: "123 Sesame street",
+                postalCode: "01234",
+                city: "laputa",
+                phone: "(+33)102030405",
+                email: "contact@johnsdinner.com",
+            },
+        };
+
+        // Setting user/register
+        req.originalUrl = "/user/register";
 
         checkData(req, res, next);
 
