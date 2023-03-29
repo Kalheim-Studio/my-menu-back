@@ -1,5 +1,4 @@
 import type { Request, Response } from "express";
-import Mongoose from "mongoose";
 import User from "../../../Models/User";
 import Restaurant from "../../../Models/Restaurant";
 import bcrypt from "bcrypt";
@@ -15,7 +14,9 @@ const registerAccount = async (req: Request, res: Response) => {
         email: req.body.restaurant.email,
     });
 
-    const hashedPwd = await bcrypt.hash(req.body.password, parseInt(String(process.env.SALT_ROUND)));
+    const hashedPwd = req.body.password
+        ? await bcrypt.hash(req.body.password, parseInt(String(process.env.SALT_ROUND)))
+        : "";
 
     // User creation
     const newUser = new User({
@@ -26,24 +27,18 @@ const registerAccount = async (req: Request, res: Response) => {
         idRestaurant: newRestaurant.id,
         role: "restaurater",
     });
+    const userValidate = newUser.validateSync();
+    const restaurantValidate = newRestaurant.validateSync();
 
-    // newUser.save()
-    //     .then((userRes: Mongoose.Document) => {
-    //         console.log("New user saved");
-    //         newRestaurant.save()
-    //             .then((restaurantRes: Mongoose.Document) => {
-    //                 console.log("New Restaurant saved");
-    //                 res.status(201).send("Register account : WIP");
-    //             })
-    //             .catch(err => {
-    //                 res.status(400).send("Error while registering data");
-    //             });
-    //     })
-    //     .catch((err: Mongoose.Error) => {
-    //         console.log(err);
-    //         res.status(400).send("Error while registering data");
-    //     });
-    res.status(200).send("OK");
+    // If one of new user or restaurant is unvalid
+    if (userValidate || restaurantValidate) res.status(400).send("Error while registering");
+    else {
+    // Saving and sendig OK response
+        await newUser.save();
+        await newRestaurant.save();
+        res.status(201).send("Account created");
+    }
+
     // Send mail
     // TO DO
 };

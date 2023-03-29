@@ -134,29 +134,15 @@ describe("checkData middleware test", () => {
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
-    // Missing dataField
-    it("Should send error if additionnal", () => {
-    // firstname missing
-        req.body = {
-            lastname: "Doe",
-            email: "john.doe@mock.com",
-            password: "Abcdefgh1234!",
-            restaurant: {
-                name: "John's Dinner",
-                address: "123 Sesame street",
-                postalCode: "01234",
-                city: "laputa",
-                phone: "(+33)102030405",
-                email: "contact@johnsdinner.com",
-            },
-        };
-
-        // Setting user/register
-        req.originalUrl = "/user/register";
+    // sanitize data
+    it("Should sanitize data", () => {
+    //&lt;b&gt;John&lt;&#x2F;b&gt;
+        req.body.firstname = "<b>John</b>";
 
         checkData(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(400);
-        expect(res.send).toHaveBeenCalledWith(errorMessage);
+        // Expect next has been call and data has been sanitized.
+        expect(next).toHaveBeenCalledWith();
+        expect(req.body.firstname).toBe("&lt;b&gt;John&lt;&#x2F;b&gt;");
     });
 });
