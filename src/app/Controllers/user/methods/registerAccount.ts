@@ -2,6 +2,8 @@ import type { Request, Response } from "express";
 import User from "../../../Models/User";
 import Restaurant from "../../../Models/Restaurant";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { sendAccountValidationMail } from "../../../Utils/mailing/mailing";
 
 const registerAccount = async (req: Request, res: Response) => {
     // Restaurant creation
@@ -34,13 +36,17 @@ const registerAccount = async (req: Request, res: Response) => {
     if (userValidate || restaurantValidate) res.status(400).send("Error while registering");
     else {
     // Saving and sendig OK response
-        await newUser.save();
-        await newRestaurant.save();
-        res.status(201).send("Account created");
+        try {
+            await newUser.save();
+            await newRestaurant.save();
+            // Send mail
+            const token = jwt.sign({ id: newUser.id }, String(process.env.TOKEN_KEY));
+            await sendAccountValidationMail(newRestaurant.email, newUser.lastname, token);
+            res.status(201).send("Account created");
+        } catch (err) {
+            res.status(400).send("Error while registering");
+        }
     }
-
-    // Send mail
-    // TO DO
 };
 
 export default registerAccount;
