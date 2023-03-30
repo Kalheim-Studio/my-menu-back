@@ -9,7 +9,7 @@ function checkData(req: Request, res: Response, next: NextFunction) {
 
     // Parse req.body for checking data.
     const isValidData = parseBody(req.body, req);
-    console.log(req.body);
+
     // Continue processing request if data are valid
     if (isValidData) next();
     // If not send error

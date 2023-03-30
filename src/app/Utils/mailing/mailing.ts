@@ -1,23 +1,19 @@
-import nodemailer from "nodemailer";
+import nodemailer, { createTransport } from "nodemailer";
 
-// Création du transporter pour envoie des mails
-const transporter = nodemailer.createTransport({
-    host: String(process.env.MAIL_HOST),
-    port: parseInt(String(process.env.MAIL_PORT)),
-    secure: false,
-    auth: {
-        user: String(process.env.EMAIL), // generated ethereal user
-        pass: String(process.env.MAIL_PASS), // generated ethereal password
-    },
-});
+// Transporter for mail sending
+function createTransporterFunction() {
+    return nodemailer.createTransport({
+        host: String(process.env.MAIL_HOST),
+        port: parseInt(String(process.env.MAIL_PORT)),
+        secure: true,
+        auth: {
+            user: String(process.env.EMAIL),
+            pass: String(process.env.MAIL_PASS),
+        },
+    });
+}
 
-// Informations de l'expéditeur
-const senderInfos = {
-    name: String(process.env.SENDER_NAME),
-    address: String(process.env.EMAIL),
-};
-
-// Adresse Front
+// Button style
 const buttonStyle = `background-color:#B04541;
 color:black;padding:0.75em;
 border-radius: 2em;
@@ -25,19 +21,27 @@ margin-bottom:4em;
 text-decoration:none;
 margin:0 10em;`;
 
-// Mail de validation du compte crée
-export const sendAccountValidationMail = (email: string, name: string, token: string) => {
+// Validation mail
+const sendAccountValidationMail = (
+    email: string,
+    name: string,
+    token: string,
+    createTransporter = createTransporterFunction
+) => {
     return new Promise((resolve, reject) => {
     // Mail infos
         const mailOptions = {
-            from: senderInfos, // Infos expéditeur
-            to: email, // Liste de reception
-            subject: "Bienvenue", // Objet
+            from: {
+                name: String(process.env.SENDER_NAME),
+                address: String(process.env.EMAIL),
+            },
+            to: email,
+            subject: "Bienvenue",
             html: `
                 <div>
                     <p>Bonjour M/Mme ${name}</p>
                     <br/>
-                    <p>Vous venez de vous inscrire sur mon site, bienvenue à vous.</p>
+                    <p>Vous venez de vous inscrire sur MyMenu, bienvenue à vous.</p>
                     <p>Merci de cliquer sur ce lien pour valider votre compte :</p>
                     <div style="display:flex">
                         <a href="${process.env.FRONT_URL}/account-validation/${token}" style="${buttonStyle}">
@@ -45,16 +49,21 @@ export const sendAccountValidationMail = (email: string, name: string, token: st
                         </a>
                     </div>
                     <br/>
-                    <div><i>Thierry Agnelli</i></div>
-                    <div><i>Développeur Fullstack Javascript/React/React Native/Node...etc </i></div>
+                    <div><i>L'équipe MyMenu.</i></div>
                 </div>`,
         };
-        // Envoi du mail
+
+        // Mail sending
+        const transporter = createTransporter();
         transporter.sendMail(mailOptions, (err) => {
-            if (err) reject(err);
-            else {
+            if (err) {
+                console.log(err);
+                reject("Error on mail sending");
+            } else {
                 resolve("email sended");
             }
         });
     });
 };
+
+export { sendAccountValidationMail };

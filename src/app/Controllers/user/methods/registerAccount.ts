@@ -39,10 +39,12 @@ const registerAccount = async (req: Request, res: Response) => {
         try {
             await newUser.save();
             await newRestaurant.save();
-            // Send mail
+            // Send validation mail
             const token = jwt.sign({ id: newUser.id }, String(process.env.TOKEN_KEY));
-            await sendAccountValidationMail(newRestaurant.email, newUser.lastname, token);
-            res.status(201).send("Account created");
+
+            sendAccountValidationMail(newRestaurant.email, newUser.lastname, token)
+                .then(() => res.status(201).send("Account created"))
+                .catch((err) => console.log(err));
         } catch (err) {
             res.status(400).send("Error while registering");
         }
