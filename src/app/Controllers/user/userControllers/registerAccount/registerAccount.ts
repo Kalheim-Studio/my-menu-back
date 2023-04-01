@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
-import User from "../../../Models/User";
-import Restaurant from "../../../Models/Restaurant";
+import User from "../../../../Models/User";
+import Restaurant from "../../../../Models/Restaurant";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { sendAccountValidationMail } from "../../../Utils/mailing/mailing";
+import { sendAccountValidationMail } from "../../../../Utils/mailing/mailing";
 
 const registerAccount = async (req: Request, res: Response) => {
     // Restaurant creation
@@ -37,6 +37,7 @@ const registerAccount = async (req: Request, res: Response) => {
     else {
     // Saving and sendig OK response
         try {
+            console.log("Creating account");
             await newUser.save();
             await newRestaurant.save();
             // Send validation mail
