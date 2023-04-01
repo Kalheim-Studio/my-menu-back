@@ -4,8 +4,12 @@ import Restaurant from "../../../../Models/Restaurant";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { sendAccountValidationMail } from "../../../../Utils/mailing/mailing";
+import { now } from "mongoose";
 
 const registerAccount = async (req: Request, res: Response) => {
+    // Creating validation token
+    const token = jwt.sign({ name: req.body.restaurant.name }, String(process.env.TOKEN_KEY));
+
     // Restaurant creation
     const newRestaurant = new Restaurant({
         name: req.body.restaurant.name,
@@ -14,8 +18,10 @@ const registerAccount = async (req: Request, res: Response) => {
         city: req.body.restaurant.city,
         phone: req.body.restaurant.phone,
         email: req.body.restaurant.email,
+        validated: token,
     });
 
+    // Hashing password before saving
     const hashedPwd = req.body.password
         ? await bcrypt.hash(req.body.password, parseInt(String(process.env.SALT_ROUND)))
         : "";
@@ -29,6 +35,8 @@ const registerAccount = async (req: Request, res: Response) => {
         idRestaurant: newRestaurant.id,
         role: "restaurater",
     });
+
+    // New entries validation
     const userValidate = newUser.validateSync();
     const restaurantValidate = newRestaurant.validateSync();
 
@@ -41,8 +49,6 @@ const registerAccount = async (req: Request, res: Response) => {
             await newUser.save();
             await newRestaurant.save();
             // Send validation mail
-            const token = jwt.sign({ id: newUser.id }, String(process.env.TOKEN_KEY));
-
             sendAccountValidationMail(newRestaurant.email, newUser.lastname, token)
                 .then(() => res.status(201).send("Account created"))
                 .catch((err) => console.log(err));
