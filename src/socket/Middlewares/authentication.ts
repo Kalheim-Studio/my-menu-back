@@ -1,10 +1,11 @@
 import type { Server } from "socket.io";
+import { logger } from "../../Utils/logger/logger";
 
 const authenticate = (io: Server) => {
-    console.log("Authentication");
+    logger("Socket authentication");
     io.use((socket, next) => {
         const { username } = socket.handshake.auth;
-        console.log("Welcome " + username);
+        logger("User connexion", username);
         next();
     });
 };

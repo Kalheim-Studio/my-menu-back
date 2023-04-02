@@ -3,8 +3,8 @@ import User from "../../../../Models/User";
 import Restaurant from "../../../../Models/Restaurant";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { sendAccountValidationMail } from "../../../../Utils/mailing/mailing";
-import { now } from "mongoose";
+import { sendAccountValidationMail } from "../../../../../Utils/mailing/mailing";
+import { logger } from "../../../../../Utils/logger/logger";
 
 const registerAccount = async (req: Request, res: Response) => {
     // Creating validation token
@@ -41,11 +41,13 @@ const registerAccount = async (req: Request, res: Response) => {
     const restaurantValidate = newRestaurant.validateSync();
 
     // If one of new user or restaurant is unvalid
-    if (userValidate || restaurantValidate) res.status(400).send("Error while registering");
-    else {
+    if (userValidate || restaurantValidate) {
+        logger("Error in new user or new restaurant data.");
+        res.status(400).send("Error while registering");
+    } else {
     // Saving and sendig OK response
         try {
-            console.log("Creating account");
+            logger("Creating account");
             await newUser.save();
             await newRestaurant.save();
             // Send validation mail

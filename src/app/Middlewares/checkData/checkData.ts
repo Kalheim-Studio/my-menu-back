@@ -1,11 +1,12 @@
 import type { Request, Response, NextFunction } from "express";
 import validator from "validator";
+import { logger } from "../../../Utils/logger/logger";
 
 type full = string | number | boolean | object;
 
 // Checking Data
 function checkData(req: Request, res: Response, next: NextFunction) {
-    console.log("Check Data");
+    logger("Checking Data");
 
     // Parse req.body for checking data.
     const isValidData = parseBody(req.body, req);
@@ -13,7 +14,10 @@ function checkData(req: Request, res: Response, next: NextFunction) {
     // Continue processing request if data are valid
     if (isValidData) next();
     // If not send error
-    else res.status(400).send("Error: Data are not valid.");
+    else {
+        logger("Error", "Data are not valid");
+        res.status(400).send("Error: Data are not valid.");
+    }
 }
 
 // Parsing body

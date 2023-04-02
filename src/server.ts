@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { Server } from "socket.io";
 import socket from "./socket/socket";
 import mongoose from "mongoose";
+import { logger } from "./Utils/logger/logger";
 
 // Initializing environnment
 dotenv.config();
@@ -26,14 +27,14 @@ const io = new Server(server, {
 // Connection to database
 mongoose
     .connect(String(process.env.DATABASE_URI))
-    .then(() => console.log("Connection to database: OK."))
-    .catch((err) => console.log("Error on database connection.", err));
+    .then(() => logger("Connection to database", "OK"))
+    .catch((err) => logger("Error on database connection.", err.message));
 
 // On server start
 server.on("listening", () => {
-    console.log("Server start on port: " + PORT);
+    logger("Server start", "Port: " + PORT);
     socket(io);
 });
 
 // On server error
-server.on("error", (err) => console.error("An error occured at server start.", err));
+server.on("error", (err) => logger("An error occured at server start.", err.message));
