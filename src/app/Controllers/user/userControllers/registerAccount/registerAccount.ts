@@ -3,12 +3,13 @@ import User from "../../../../Models/User";
 import Restaurant from "../../../../Models/Restaurant";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { v4 as uuidV4 } from "uuid";
 import { sendAccountValidationMail } from "../../../../../Utils/mailing/mailing";
 import { logger } from "../../../../../Utils/logger/logger";
 
 const registerAccount = async (req: Request, res: Response) => {
     // Creating validation token
-    const token = jwt.sign({ name: req.body.restaurant.name }, String(process.env.TOKEN_KEY));
+    const token = jwt.sign({ name: req.body.restaurant.name + uuidV4() }, String(process.env.TOKEN_KEY));
 
     // Restaurant creation
     const newRestaurant = new Restaurant({

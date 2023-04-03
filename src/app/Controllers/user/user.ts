@@ -1,6 +1,6 @@
 // Methods
 import registerAccount from "./userControllers/registerAccount/registerAccount";
-import validateAccount from "./userControllers/validateAccount";
+import validateAccount from "./userControllers/validateAccount/validateAccount";
 import authentication from "./userControllers/authenticate";
 import getAllSubAccount from "./userControllers/getAllSubAccount";
 import createSubAccount from "./userControllers/createSubAccount";

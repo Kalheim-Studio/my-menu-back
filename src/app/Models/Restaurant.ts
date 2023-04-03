@@ -10,7 +10,7 @@ const restaurantSchema = new mongoose.Schema(
         postalCode: { type: String, required: true },
         city: { type: String, required: true },
         phone: { type: String, required: true },
-        email: { type: String, required: true },
+        email: { type: String, required: true, unique: true },
         menu: [{ type: menuSchema }],
         plat: [{ type: itemSchema }],
         table: [{ type: tableSchema }],
