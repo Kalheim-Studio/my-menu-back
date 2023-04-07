@@ -1,4 +1,4 @@
-import nodemailer, { createTransport } from "nodemailer";
+import nodemailer from "nodemailer";
 
 // Transporter for mail sending
 function createTransporterFunction() {

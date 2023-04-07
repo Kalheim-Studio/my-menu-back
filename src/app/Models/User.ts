@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
         lastname: { type: String, required: true },
         password: { type: String, required: true },
         role: { type: String, default: "Restaurater" },
-        idRestaurant: { type: String, required: true },
+        restaurantId: { type: String, required: true },
     },
     { collection: "User" }
 );

@@ -33,7 +33,7 @@ const registerAccount = async (req: Request, res: Response) => {
         lastname: req.body.lastname,
         email: req.body.email,
         password: hashedPwd,
-        idRestaurant: newRestaurant.id,
+        restaurantId: newRestaurant.id,
         role: "restaurater",
     });
 
@@ -51,10 +51,14 @@ const registerAccount = async (req: Request, res: Response) => {
             logger("Creating account");
             await newUser.save();
             await newRestaurant.save();
+            logger("Account saved");
             // Send validation mail
             sendAccountValidationMail(newRestaurant.email, newUser.lastname, token)
-                .then(() => res.status(201).send("Account created"))
-                .catch((err) => console.log(err));
+                .then(() => {
+                    console.log("email sent");
+                    res.status(201).send("Account created");
+                })
+                .catch((err) => logger(err.message));
         } catch (err) {
             res.status(400).send("Error while registering");
         }
