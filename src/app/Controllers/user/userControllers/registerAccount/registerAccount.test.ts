@@ -1,8 +1,8 @@
 import request from "supertest";
 import type { Request } from "express";
-import app from "../../../../app";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import app from "../../../../app";
 import Restaurant from "../../../../Models/Restaurant";
 import User from "../../../../Models/User";
 
@@ -12,23 +12,6 @@ import { sendAccountValidationMail } from "../../../../../Utils/mailing/mailing"
 jest.mock("../../../../../Utils/mailing/mailing", () => ({
     sendAccountValidationMail: jest.fn().mockResolvedValue(undefined),
 }));
-
-// type RegisterAccountBody = {
-//   body: {
-//     firstname: string;
-//     lastname: string;
-//     email: string;
-//     password: string;
-//     restaurant: {
-//       name: string;
-//       address: string;
-//       postalCode: string;
-//       city: string;
-//       phone: string;
-//       email: string;
-//     };
-//   };
-// };
 
 describe("Testing registerAccount controller", () => {
     dotenv.config();
@@ -47,7 +30,7 @@ describe("Testing registerAccount controller", () => {
                 postalCode: "01234",
                 city: "laputa",
                 phone: "(+33)102030405",
-                email: "thierry.agnelli@gmail.com",
+                email: "john.doe@register-account.com",
             },
         };
 

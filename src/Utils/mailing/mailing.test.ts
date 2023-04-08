@@ -6,7 +6,7 @@ describe("testing mailing methods", () => {
     dotenv.config();
 
     it("Should send validation mail", async () => {
-        const email = "thierry.agnelli@gmail.com";
+        const email = "john.doe@mock.com";
         const name = "John Doe";
         const token = "thisisatoken";
 
