@@ -67,7 +67,7 @@ describe("checkData middleware test", () => {
 
     // Wrong password
     it("Should send error if bad password", () => {
-        req.body.email = "123";
+        req.body.password = "123";
 
         checkData(req, res, next);
 
@@ -116,7 +116,7 @@ describe("checkData middleware test", () => {
 
     // Wrong phone
     it("Should send error if bad phone", () => {
-        req.body.restaurant.email = "1123456789";
+        req.body.restaurant.phone = "1123456789";
 
         checkData(req, res, next);
 

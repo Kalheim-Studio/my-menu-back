@@ -56,6 +56,6 @@ describe("Testing validateAccount controller", () => {
             .send(req.body);
 
         expect(response.status).toBe(400);
-        expect(response.text).toBe("Account has already been validated");
+        expect(response.text).toBe("No account to validate have been found");
     });
 });

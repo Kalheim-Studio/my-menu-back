@@ -9,16 +9,16 @@ import { logger } from "../../../../../Utils/logger/logger";
 
 const registerAccount = async (req: Request, res: Response) => {
     // Creating validation token
-    const token = jwt.sign({ name: req.body.restaurant.name + uuidV4() }, String(process.env.TOKEN_KEY));
+    const token = jwt.sign(uuidV4(), String(process.env.TOKEN_KEY));
 
     // Restaurant creation
     const newRestaurant = new Restaurant({
-        name: req.body.restaurant.name,
-        address: req.body.restaurant.address,
-        postalCode: req.body.restaurant.postalCode,
-        city: req.body.restaurant.city,
-        phone: req.body.restaurant.phone,
-        email: req.body.restaurant.email,
+        name: req.body.restaurant?.name,
+        address: req.body.restaurant?.address,
+        postalCode: req.body.restaurant?.postalCode,
+        city: req.body.restaurant?.city,
+        phone: req.body.restaurant?.phone,
+        email: req.body.restaurant?.email,
         validated: token,
     });
 

@@ -19,6 +19,12 @@ describe("Testing registerAccount controller", () => {
     const req: Request = { body: {} } as Request;
 
     beforeAll(async () => {
+    // Database connexion
+        await mongoose.connect(String(process.env.DATABASE_URI));
+    });
+
+    // Mocking Req.body before each test
+    beforeEach(async () => {
         req.body = {
             firstname: "John",
             lastname: "Doe",
@@ -33,9 +39,6 @@ describe("Testing registerAccount controller", () => {
                 email: "john.doe@register-account.com",
             },
         };
-
-        // Database connexion
-        await mongoose.connect(String(process.env.DATABASE_URI));
     });
 
     afterAll(async () => {
@@ -54,6 +57,44 @@ describe("Testing registerAccount controller", () => {
 
         // Disconnecting from database
         await mongoose.disconnect();
+    });
+
+    it("Should fail if user missing", async () => {
+        req.body = {
+            restaurant: {
+                name: "John's Dinner",
+                address: "123 Sesame street",
+                postalCode: "01234",
+                city: "laputa",
+                phone: "(+33)102030405",
+                email: "john.doe@register-account.com",
+            },
+        };
+
+        const response = await request(app).post("/user/register").send(req.body);
+
+        // Check response
+        expect(response.status).toBe(400);
+        expect(response.text).toEqual("Error while registering");
+        // Check mail not sended
+        expect(sendAccountValidationMail).toHaveBeenCalledTimes(0);
+    });
+
+    it("Should fail if restaurant missing", async () => {
+        req.body = {
+            firstname: "John",
+            lastname: "Doe",
+            email: "john.doe@mock.com",
+            password: "Abcdefgh1234!",
+        };
+
+        const response = await request(app).post("/user/register").send(req.body);
+
+        // Check response
+        expect(response.status).toBe(400);
+        expect(response.text).toEqual("Error while registering");
+        // Check mail not sended
+        expect(sendAccountValidationMail).toHaveBeenCalledTimes(0);
     });
 
     it("Should register new account", async () => {
