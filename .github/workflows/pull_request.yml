@@ -34,7 +34,7 @@ jobs:
           MAIL_PASS: ${{ secrets.MAIL_PASS }}
           SALT_ROUND: ${{ secrets.SALT_ROUND }}
           TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
-          FRONT_URL: ${{ varaibles.FRONT_URL }}
+          FRONT_URL: ${{ variables.FRONT_URL }}
         run: |
           echo "Start running tests"
           npm run test
