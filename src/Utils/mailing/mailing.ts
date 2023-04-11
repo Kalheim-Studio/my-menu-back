@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
 
+const NAME = "[NO_REPLY]MyMenu";
+
 // Transporter for mail sending
 function createTransporterFunction() {
     return nodemailer.createTransport({
@@ -32,7 +34,7 @@ const sendAccountValidationMail = (
     // Mail infos
         const mailOptions = {
             from: {
-                name: String(process.env.SENDER_NAME),
+                name: NAME,
                 address: String(process.env.EMAIL),
             },
             to: email,
