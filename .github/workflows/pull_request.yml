@@ -24,7 +24,8 @@ jobs:
           echo "Start running lint"
           npm run lint
       - run: echo "Lint ok."
-      - name: Setting environment variables
+      - name: Running Tests
+        run: echo "Setting environment variables"
         env:
           DATABASE_URI: ${{ secrets.DATABASE_URI }}
           EMAIL: ${{ secrets.EMAIL }}
@@ -34,7 +35,6 @@ jobs:
           SALT_ROUND: ${{ secrets.SALT_ROUND }}
           TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
           FRONT_URL: ${{ varaibles.FRONT_URL }}
-      - name: Running Tests
         run: |
           echo "Start running tests"
           npm run test
