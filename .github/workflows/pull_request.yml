@@ -25,7 +25,6 @@ jobs:
           npm run lint
       - run: echo "Lint ok."
       - name: Running Tests
-        run: echo "Setting environment variables"
         env:
           DATABASE_URI: ${{ secrets.DATABASE_URI }}
           EMAIL: ${{ secrets.EMAIL }}
