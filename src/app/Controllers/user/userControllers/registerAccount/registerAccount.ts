@@ -55,7 +55,7 @@ const registerAccount = async (req: Request, res: Response) => {
             // Send validation mail
             sendAccountValidationMail(newRestaurant.email, newUser.lastname, token)
                 .then(() => {
-                    console.log("email sent");
+                    logger("An email has been sent to", newRestaurant.email);
                     res.status(201).send("Account created");
                 })
                 .catch((err) => logger(err.message));

@@ -36,7 +36,7 @@ describe("Testing registerAccount controller", () => {
                 postalCode: "01234",
                 city: "laputa",
                 phone: "(+33)102030405",
-                email: "john.doe@register-account.com",
+                email: "thierry.agnelli@gmail.com",
             },
         };
     });
