@@ -100,7 +100,7 @@ describe("Testing registerAccount controller", () => {
     it("Should register new account", async () => {
         const response = await request(app).post("/user/register").send(req.body);
 
-        // CHeck response
+        // Check response
         expect(response.status).toBe(201);
         expect(response.text).toEqual("Account created");
         // Check mail sended

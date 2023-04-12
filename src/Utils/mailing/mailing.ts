@@ -1,8 +1,9 @@
 import nodemailer from "nodemailer";
+import { logger } from "../logger/logger";
 
 const NAME = "[NO_REPLY]MyMenu";
 
-// Transporter for mail sending
+// Transporter for mail sending (in a function to be called after dotenv.config())
 function createTransporterFunction() {
     return nodemailer.createTransport({
         host: String(process.env.MAIL_HOST),
@@ -24,22 +25,23 @@ text-decoration:none;
 margin:0 10em;`;
 
 // Validation mail
-const sendAccountValidationMail = (
+const sendAccountValidationMail = async (
     email: string,
     name: string,
     token: string,
     createTransporter = createTransporterFunction
 ) => {
-    return new Promise((resolve, reject) => {
+    // ) => {
+    // return new Promise((resolve: (value: string) => void) => {
     // Mail infos
-        const mailOptions = {
-            from: {
-                name: NAME,
-                address: String(process.env.EMAIL),
-            },
-            to: email,
-            subject: "Bienvenue",
-            html: `
+    const mailOptions = {
+        from: {
+            name: NAME,
+            address: String(process.env.EMAIL),
+        },
+        to: email,
+        subject: "Bienvenue",
+        html: `
                 <div>
                     <p>Bonjour M/Mme ${name}</p>
                     <br/>
@@ -53,19 +55,20 @@ const sendAccountValidationMail = (
                     <br/>
                     <div><i>L'équipe MyMenu.</i></div>
                 </div>`,
-        };
+    };
 
-        // Mail sending
-        const transporter = createTransporter();
-        transporter.sendMail(mailOptions, (err) => {
-            if (err) {
-                console.log(err);
-                reject("Error on mail sending");
-            } else {
-                resolve("email sended");
-            }
-        });
-    });
+    // Mail sending
+    const transporter = createTransporter();
+
+    // Trying to send mail
+    try {
+        await transporter.sendMail(mailOptions);
+        return "Email sent";
+    } catch (err) {
+        logger(String(err));
+        await transporter.close();
+        return "Error on mail sending";
+    }
 };
 
 export { sendAccountValidationMail };

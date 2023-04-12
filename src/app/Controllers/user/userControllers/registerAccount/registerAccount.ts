@@ -46,20 +46,21 @@ const registerAccount = async (req: Request, res: Response) => {
         logger("Error in new user or new restaurant data.");
         res.status(400).send("Error while registering");
     } else {
-    // Saving and sendig OK response
+    // Try saving data and sending mail & response
         try {
             logger("Creating account");
+            // Saving data
             await newUser.save();
             await newRestaurant.save();
             logger("Account saved");
-            // Send validation mail
-            sendAccountValidationMail(newRestaurant.email, newUser.lastname, token)
-                .then(() => {
-                    logger("An email has been sent to", newRestaurant.email);
-                    res.status(201).send("Account created");
-                })
-                .catch((err) => logger(err.message));
-        } catch (err) {
+
+            // Sending validation mail
+            const mailResult = await sendAccountValidationMail(newRestaurant.email, newUser.lastname, token);
+            logger("Account created", mailResult);
+            res.status(201).send("Account created");
+        } catch (err: unknown) {
+            // Sending error
+            logger("registerAccount", (err as Error).message);
             res.status(400).send("Error while registering");
         }
     }
