@@ -25,6 +25,10 @@ jobs:
           npm run lint
       - run: echo "Lint ok."
       - name: Running Tests
+        run: |
+          echo "Start running tests"
+          echo "Test: $FRONT_URL"
+          npm run test
         env:
           DATABASE_URI: ${{ secrets.DATABASE_URI }}
           EMAIL: ${{ secrets.EMAIL }}
@@ -34,9 +38,6 @@ jobs:
           SALT_ROUND: ${{ secrets.SALT_ROUND }}
           TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
           FRONT_URL: ${{ env.FRONT_URL }}
-        run: |
-          echo "Start running tests"
-          npm run test
       - run: echo "Tests ok."
       - name: Building projects
         run: |
