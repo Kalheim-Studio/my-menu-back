@@ -1,6 +1,6 @@
 name: GitHub Ci-CD Test Project
 run-name: ${{ github.actor }} has create a pull request for branch ${{ github.ref }}.
-on: [ pull_request ]
+on: [pull_request]
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
@@ -27,7 +27,17 @@ jobs:
       - name: Running Tests
         run: |
           echo "Start running tests"
+          echo "Test: $FRONT_URL"
           npm run test
+        env:
+          DATABASE_URI: ${{ secrets.DATABASE_URI }}
+          EMAIL: ${{ secrets.EMAIL }}
+          MAIL_HOST: ${{ secrets.MAIL_HOST }}
+          MAIL_PORT: ${{ secrets.MAIL_PORT }}
+          MAIL_PASS: ${{ secrets.MAIL_PASS }}
+          SALT_ROUND: ${{ secrets.SALT_ROUND }}
+          TOKEN_KEY: ${{ secrets.TOKEN_KEY }}
+          FRONT_URL: ${{ env.FRONT_URL }}
       - run: echo "Tests ok."
       - name: Building projects
         run: |
@@ -35,4 +45,3 @@ jobs:
           npm run build
       - run: echo "Build ok."
       - run: echo "This job has ended with status ${{ job.status }}."
-      

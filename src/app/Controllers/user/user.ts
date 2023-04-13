@@ -1,13 +1,13 @@
 // Methods
-import registerAccount from "./methods/registerAccount";
-import validateAccount from "./methods/validateAccount";
-import authentication from "./methods/authenticate";
-import getAllSubAccount from "./methods/getAllSubAccount";
-import createSubAccount from "./methods/createSubAccount";
-import deleteSubAccount from "./methods/deleteSubAccount";
-import getAccountInfo from "./methods/getAccountInfo";
-import resetPassword from "./methods/resetPassword";
-import changePassword from "./methods/changePassword";
+import registerAccount from "./userControllers/registerAccount/registerAccount";
+import validateAccount from "./userControllers/validateAccount/validateAccount";
+import authentication from "./userControllers/authenticate";
+import getAllSubAccount from "./userControllers/getAllSubAccount";
+import createSubAccount from "./userControllers/createSubAccount";
+import deleteSubAccount from "./userControllers/deleteSubAccount";
+import getAccountInfo from "./userControllers/getAccountInfo";
+import resetPassword from "./userControllers/resetPassword";
+import changePassword from "./userControllers/changePassword";
 
 const User = {
     // Account registration
