@@ -3,7 +3,7 @@ import type { Request } from "express";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import Restaurant from "../../../../Models/Restaurant";
+import { Restaurant } from "../../../../Models/Restaurant";
 import app from "../../../../app";
 
 describe("Testing validateAccount controller", () => {
@@ -41,7 +41,6 @@ describe("Testing validateAccount controller", () => {
     });
 
     it("Should validate new account", async () => {
-        console.log("URL :", "/user/validate-account/" + token);
         const response = await request(app).put("/user/validate-account/" + token);
 
         expect(response.status).toBe(200);

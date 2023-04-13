@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import Restaurant from "../../../../Models/Restaurant";
+import { Restaurant } from "../../../../Models/Restaurant";
 import { logger } from "../../../../../Utils/logger/logger";
 
 const validateAccount = (req: Request, res: Response) => {

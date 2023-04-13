@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import User from "../../../../Models/User";
-import Restaurant from "../../../../Models/Restaurant";
+import { User } from "../../../../Models/User";
+import { Restaurant } from "../../../../Models/Restaurant";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { v4 as uuidV4 } from "uuid";

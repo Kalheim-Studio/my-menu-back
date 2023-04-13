@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { logger } from "../../../../../Utils/logger/logger";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import Restaurant from "../../../../Models/Restaurant";
+import { Restaurant } from "../../../../Models/Restaurant";
 
 const authentication = async (req: Request, res: Response) => {
     logger("authenticate", "Authentication attempt");
@@ -12,9 +12,7 @@ const authentication = async (req: Request, res: Response) => {
 
     // Check if account found and paswword OK
     if (result && bcrypt.compareSync(req.body.password, result.password)) {
-        console.log(bcrypt.compareSync(req.body.password, result.password));
-
-        // Check if account has been valdiated
+    // Check if account has been valdiated
         if (result.validated === "true") {
             const token = jwt.sign(
                 {

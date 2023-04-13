@@ -22,4 +22,6 @@ const restaurantSchema = new mongoose.Schema(
     { collection: "Restaurant" }
 );
 
-export default mongoose.model("Restaurant", restaurantSchema);
+const Restaurant = mongoose.model("Restaurant", restaurantSchema);
+
+export { Restaurant };

@@ -3,8 +3,8 @@ import type { Request } from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import app from "../../../../app";
-import Restaurant from "../../../../Models/Restaurant";
-import User from "../../../../Models/User";
+import { Restaurant } from "../../../../Models/Restaurant";
+import { User } from "../../../../Models/User";
 import { sendAccountValidationMail } from "../../../../../Utils/mailing/mailing";
 
 // Mocking send email funtion
