@@ -63,9 +63,10 @@ const sendAccountValidationMail = async (
     // Trying to send mail
     try {
         await transporter.sendMail(mailOptions);
+        logger("mailing", "Email sent", { successMessage: "OK" });
         return "Email sent";
     } catch (err) {
-        logger(String(err));
+        logger("mailing", "Error", { errorMessage: String(err) });
         await transporter.close();
         return "Error on mail sending";
     }

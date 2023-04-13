@@ -43,24 +43,24 @@ const registerAccount = async (req: Request, res: Response) => {
 
     // If one of new user or restaurant is unvalid
     if (userValidate || restaurantValidate) {
-        logger("Error in new user or new restaurant data.");
+        logger("registerAccount", "Error", { errorMessage: "Error in new user or new restaurant data." });
         res.status(400).send("Error while registering");
     } else {
     // Try saving data and sending mail & response
         try {
-            logger("Creating account");
+            logger("registerAccount", "Creating account");
             // Saving data
             await newUser.save();
             await newRestaurant.save();
-            logger("Account saved");
+            logger("registerAccount", "Account saved", { successMessage: "OK" });
 
             // Sending validation mail
             const mailResult = await sendAccountValidationMail(newRestaurant.email, newUser.lastname, token);
-            logger("Account created", mailResult);
+            logger("registerAccount", "Account created", { successMessage: mailResult });
             res.status(201).send("Account created");
         } catch (err: unknown) {
             // Sending error
-            logger("registerAccount", (err as Error).message);
+            logger("registerAccount", "Error", { errorMessage: (err as Error).message });
             res.status(400).send("Error while registering");
         }
     }

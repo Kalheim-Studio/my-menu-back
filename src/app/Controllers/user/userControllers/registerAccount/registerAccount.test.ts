@@ -19,10 +19,7 @@ describe("Testing registerAccount controller", () => {
     const req: Request = { body: {} } as Request;
 
     beforeAll(async () => {
-        console.log("######################################################################################");
-        console.log(process.env.FRONT_URL);
-        console.log("######################################################################################");
-        // Database connexion
+    // Database connexion
         await mongoose.connect(String(process.env.DATABASE_URI));
     });
 

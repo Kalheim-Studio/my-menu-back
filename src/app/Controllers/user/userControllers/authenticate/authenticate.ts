@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import { logger } from "../../../../../Utils/logger/logger";
 
 const authentication = (req: Request, res: Response) => {
     res.status(200).json({
