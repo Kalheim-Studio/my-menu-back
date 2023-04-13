@@ -46,7 +46,6 @@ function validData(data: string, value: full, req: Request, parentObjectKey: str
     // Checking data field
     switch (data) {
     // Must be email
-    case "login":
     case "email":
         // Checking mail
         if (!validator.isEmail(String(value))) isValidData = false;
@@ -72,6 +71,7 @@ function validData(data: string, value: full, req: Request, parentObjectKey: str
         if (!validator.isNumeric(String(value)) || String(value).length !== 5) isValidData = false;
         break;
     // Data fields that have to be a non void string
+    case "identifier":
     case "firstname":
     case "lastname":
     case "name":

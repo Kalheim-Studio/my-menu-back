@@ -22,6 +22,7 @@ describe("Testing validateAccount controller", () => {
             postalCode: "01234",
             city: "laputa",
             phone: "(+33)102030405",
+            password: "Abcdefgh1234!",
             email: "john.doe@validate-account.com",
             validated: token,
         });

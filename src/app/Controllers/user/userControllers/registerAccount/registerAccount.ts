@@ -11,6 +11,11 @@ const registerAccount = async (req: Request, res: Response) => {
     // Creating validation token
     const token = jwt.sign(uuidV4(), String(process.env.TOKEN_KEY));
 
+    // Hashing password before saving
+    const hashedPwd = req.body.restaurant?.password
+        ? await bcrypt.hash(req.body.restaurant.password, parseInt(String(process.env.SALT_ROUND)))
+        : "";
+
     // Restaurant creation
     const newRestaurant = new Restaurant({
         name: req.body.restaurant?.name,
@@ -19,19 +24,15 @@ const registerAccount = async (req: Request, res: Response) => {
         city: req.body.restaurant?.city,
         phone: req.body.restaurant?.phone,
         email: req.body.restaurant?.email,
+        password: hashedPwd,
         validated: token,
     });
 
-    // Hashing password before saving
-    const hashedPwd = req.body.password
-        ? await bcrypt.hash(req.body.password, parseInt(String(process.env.SALT_ROUND)))
-        : "";
-
     // User creation
     const newUser = new User({
+        identifier: req.body.identifier,
         firstname: req.body.firstname,
         lastname: req.body.lastname,
-        email: req.body.email,
         password: hashedPwd,
         restaurantId: newRestaurant.id,
         role: "restaurater",
@@ -50,8 +51,9 @@ const registerAccount = async (req: Request, res: Response) => {
         try {
             logger("registerAccount", "Creating account");
             // Saving data
-            await newUser.save();
             await newRestaurant.save();
+            await newUser.save();
+
             logger("registerAccount", "Account saved", { successMessage: "OK" });
 
             // Sending validation mail
