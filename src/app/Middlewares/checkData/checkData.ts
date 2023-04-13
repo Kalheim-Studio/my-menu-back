@@ -6,16 +6,19 @@ type full = string | number | boolean | object;
 
 // Checking Data
 function checkData(req: Request, res: Response, next: NextFunction) {
-    logger("Checking Data");
+    logger("checkData", "Checking Data");
 
     // Parse req.body for checking data.
     const isValidData = parseBody(req.body, req);
 
     // Continue processing request if data are valid
-    if (isValidData) next();
+    if (isValidData) {
+        logger("checkData", "Checking Data", { successMessage: "OK" });
+        next();
+    }
     // If not send error
     else {
-        logger("Error", "Data are not valid");
+        logger("checkData", "Error", { errorMessage: "Data are not valid" });
         res.status(400).send("Error: Data are not valid.");
     }
 }
@@ -42,6 +45,8 @@ function validData(data: string, value: full, req: Request, parentObjectKey: str
     let regExCheck: RegExpMatchArray | null;
     // Checking data field
     switch (data) {
+    // Must be email
+    case "login":
     case "email":
         // Checking mail
         if (!validator.isEmail(String(value))) isValidData = false;
@@ -77,7 +82,7 @@ function validData(data: string, value: full, req: Request, parentObjectKey: str
         break;
     // All other fields are not allowed
     default:
-        console.log("Other data: ", data, typeof value);
+        logger("checkData", "Other data: " + data + " " + typeof value);
         isValidData = false;
         break;
     }
