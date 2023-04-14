@@ -6,7 +6,7 @@ const socket = (io: Server) => {
     authenticate(io);
 
     io.on("connection", (socket) => {
-        logger("Socket connexion");
+        logger("socket", "Socket connexion");
 
         // get restaurant id
         // Join restaurant id room
@@ -15,7 +15,7 @@ const socket = (io: Server) => {
         // Listening event
         // Change table state
         socket.on("tableState", (data) => {
-            logger("Table state - " + data.content);
+            logger("socket", "Table state", { infoMessage: data.content });
             io.to("restaurantId").emit("message", {
                 content: "Table State received",
                 username: "MyMenu",
@@ -23,7 +23,7 @@ const socket = (io: Server) => {
         });
         // Waiter help table state
         socket.on("helpState", (data) => {
-            logger("Table Waiter help state", data.content);
+            logger("socket", "Table Waiter help state", { infoMessage: data.content });
             io.to("restaurantId").emit("message", {
                 content: "Help State received",
                 username: "MyMenu",
@@ -31,7 +31,7 @@ const socket = (io: Server) => {
         });
         // Launch order
         socket.on("launchOrder", (data) => {
-            logger("Launch Order", data.content);
+            logger("socket", "Launch Order", { infoMessage: data.content });
             io.to("restaurantId").emit("message", {
                 content: "Launch Order received",
                 username: "MyMenu",

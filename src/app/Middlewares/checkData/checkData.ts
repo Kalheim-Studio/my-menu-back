@@ -6,16 +6,19 @@ type full = string | number | boolean | object;
 
 // Checking Data
 function checkData(req: Request, res: Response, next: NextFunction) {
-    logger("Checking Data");
+    logger("checkData", "Checking Data");
 
     // Parse req.body for checking data.
     const isValidData = parseBody(req.body, req);
 
     // Continue processing request if data are valid
-    if (isValidData) next();
+    if (isValidData) {
+        logger("checkData", "Checking Data", { successMessage: "OK" });
+        next();
+    }
     // If not send error
     else {
-        logger("Error", "Data are not valid");
+        logger("checkData", "Error", { errorMessage: "Data are not valid" });
         res.status(400).send("Error: Data are not valid.");
     }
 }
@@ -42,6 +45,7 @@ function validData(data: string, value: full, req: Request, parentObjectKey: str
     let regExCheck: RegExpMatchArray | null;
     // Checking data field
     switch (data) {
+    // Must be email
     case "email":
         // Checking mail
         if (!validator.isEmail(String(value))) isValidData = false;
@@ -67,6 +71,7 @@ function validData(data: string, value: full, req: Request, parentObjectKey: str
         if (!validator.isNumeric(String(value)) || String(value).length !== 5) isValidData = false;
         break;
     // Data fields that have to be a non void string
+    case "identifier":
     case "firstname":
     case "lastname":
     case "name":
@@ -75,17 +80,22 @@ function validData(data: string, value: full, req: Request, parentObjectKey: str
         // Is string and non void string
         if (typeof value !== "string" || validator.isEmpty(String(value))) isValidData = false;
         break;
+    // Must be boolean
+    case "stayLogged":
+        if (typeof value !== "boolean") isValidData = false;
+        break;
     // All other fields are not allowed
     default:
-        console.log("Other data: ", data, typeof value);
+        logger("checkData", "Other data: " + data + " " + typeof value);
         isValidData = false;
         break;
     }
 
-    // Sanitize data
-    if (parentObjectKey) req.body[parentObjectKey][data] = validator.escape(String(value));
-    else req.body[data] = validator.escape(String(value));
-
+    // Sanitize data if not boolean or number
+    if (typeof value !== "boolean" && typeof value !== "number") {
+        if (parentObjectKey) req.body[parentObjectKey][data] = validator.escape(String(value));
+        else req.body[data] = validator.escape(String(value));
+    }
     return isValidData;
 }
 

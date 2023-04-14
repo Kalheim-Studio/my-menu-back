@@ -11,6 +11,7 @@ const restaurantSchema = new mongoose.Schema(
         city: { type: String, required: true },
         phone: { type: String, required: true },
         email: { type: String, required: true, unique: true },
+        password: { type: String, required: true },
         menu: [{ type: menuSchema }],
         plat: [{ type: itemSchema }],
         table: [{ type: tableSchema }],
@@ -21,4 +22,6 @@ const restaurantSchema = new mongoose.Schema(
     { collection: "Restaurant" }
 );
 
-export default mongoose.model("Restaurant", restaurantSchema);
+const Restaurant = mongoose.model("Restaurant", restaurantSchema);
+
+export { Restaurant };

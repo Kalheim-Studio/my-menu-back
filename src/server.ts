@@ -27,14 +27,16 @@ const io = new Server(server, {
 // Connection to database
 mongoose
     .connect(String(process.env.DATABASE_URI))
-    .then(() => logger("Connection to database", "OK"))
-    .catch((err) => logger("Error on database connection.", err.message));
+    .then(() => logger("server", "Connection to database", { successMessage: "OK" }))
+    .catch((err) => logger("server", "Error on database connection.", { errorMessage: err.message }));
 
 // On server start
 server.on("listening", () => {
-    logger("Server start", "Port: " + PORT);
+    logger("server", "Server start", { infoMessage: "Port: " + PORT });
     socket(io);
 });
 
 // On server error
-server.on("error", (err) => logger("An error occured at server start.", err.message));
+server.on("error", (err) =>
+    logger("server", "An error occured at server start.", { errorMessage: err.message })
+);

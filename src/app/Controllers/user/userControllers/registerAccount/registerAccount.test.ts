@@ -3,9 +3,8 @@ import type { Request } from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import app from "../../../../app";
-import Restaurant from "../../../../Models/Restaurant";
-import User from "../../../../Models/User";
-
+import { Restaurant } from "../../../../Models/Restaurant";
+import { User } from "../../../../Models/User";
 import { sendAccountValidationMail } from "../../../../../Utils/mailing/mailing";
 
 // Mocking send email funtion
@@ -19,27 +18,24 @@ describe("Testing registerAccount controller", () => {
     const req: Request = { body: {} } as Request;
 
     beforeAll(async () => {
-        console.log("######################################################################################");
-        console.log(process.env.FRONT_URL);
-        console.log("######################################################################################");
-        // Database connexion
+    // Database connexion
         await mongoose.connect(String(process.env.DATABASE_URI));
     });
 
     // Mocking Req.body before each test
     beforeEach(async () => {
         req.body = {
+            identifier: "John_Doe",
             firstname: "John",
             lastname: "Doe",
-            email: "john.doe@mock.com",
-            password: "Abcdefgh1234!",
             restaurant: {
                 name: "John's Dinner",
                 address: "123 Sesame street",
                 postalCode: "01234",
                 city: "laputa",
                 phone: "(+33)102030405",
-                email: "thierry.agnelli@gmail.com",
+                email: "John.Doe@register-account.com",
+                password: "Abcdefgh1234!",
             },
         };
     });
@@ -71,6 +67,7 @@ describe("Testing registerAccount controller", () => {
                 city: "laputa",
                 phone: "(+33)102030405",
                 email: "john.doe@register-account.com",
+                password: "Abcdefgh1234!",
             },
         };
 
@@ -85,10 +82,10 @@ describe("Testing registerAccount controller", () => {
 
     it("Should fail if restaurant missing", async () => {
         req.body = {
+            identifier: "John_Doe",
             firstname: "John",
             lastname: "Doe",
             email: "john.doe@mock.com",
-            password: "Abcdefgh1234!",
         };
 
         const response = await request(app).post("/user/register").send(req.body);
@@ -110,7 +107,7 @@ describe("Testing registerAccount controller", () => {
         expect(sendAccountValidationMail).toHaveBeenCalled();
     });
 
-    it("Should fail if user already exist", async () => {
+    it("Should fail if account already exist", async () => {
         const response = await request(app).post("/user/register").send(req.body);
 
         // Check response
