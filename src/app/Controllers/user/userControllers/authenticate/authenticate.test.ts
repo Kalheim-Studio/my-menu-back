@@ -6,13 +6,11 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { Restaurant } from "../../../../Models/Restaurant";
 import app from "../../../../app";
-import { ReadStream } from "fs";
 
 describe("Testing authenticate controller", () => {
     dotenv.config();
     const req: Request = { body: {} } as Request;
     const token = jwt.sign("test-token", String(process.env.TOKEN_KEY));
-    let restaurantId = "";
 
     // Mock new restaurant
     beforeAll(async () => {
@@ -29,7 +27,7 @@ describe("Testing authenticate controller", () => {
             email: "john.doe@authentication.com",
             validated: token,
         });
-        restaurantId = String(newRestaurant._id);
+
         await newRestaurant.save();
     });
 
@@ -102,26 +100,53 @@ describe("Testing authenticate controller", () => {
         expect(response.text).toBe("Le compte n'a pas encore été validé");
     });
 
-    it("Authenticate OK", async () => {
+    it("Authenticate OK, stayLogged : true", async () => {
         req.body = {
             email: "john.doe@authentication.com",
             password: "Abcdefgh1234!",
+            stayLogged: true,
         };
 
+        // Validate account
         await Restaurant.updateOne({ email: "john.doe@authentication.com" }, { validated: "true" });
 
-        const authToken = jwt.sign(
-            {
-                restaurantId: restaurantId,
-            },
-            String(process.env.TOKEN_KEY)
-        );
+        const jwtSignSpy = jest.spyOn(jwt, "sign");
 
         const response = await request(app).post("/user/authentication").send(req.body);
 
         expect(response.status).toBe(200);
-        expect(response.body).toEqual({
-            token: authToken,
-        });
+        expect(response.body.token).toBeDefined();
+        expect(jwtSignSpy).toHaveBeenCalledWith(
+            {
+                restaurantId: expect.any(String),
+            },
+            String(process.env.TOKEN_KEY)
+        );
+
+        jwtSignSpy.mockRestore();
+    });
+
+    it("Authenticate OK, stayLogged : false", async () => {
+        req.body = {
+            email: "john.doe@authentication.com",
+            password: "Abcdefgh1234!",
+            stayLogged: false,
+        };
+        const jwtSignSpy = jest.spyOn(jwt, "sign");
+
+        const response = await request(app).post("/user/authentication").send(req.body);
+
+        expect(response.status).toBe(200);
+
+        expect(response.body.token).toBeDefined();
+        expect(jwtSignSpy).toHaveBeenCalledWith(
+            {
+                restaurantId: expect.any(String),
+            },
+            String(process.env.TOKEN_KEY),
+            { expiresIn: "2h" }
+        );
+
+        jwtSignSpy.mockRestore();
     });
 });

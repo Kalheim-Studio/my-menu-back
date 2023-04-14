@@ -14,12 +14,20 @@ const authentication = async (req: Request, res: Response) => {
     if (result && bcrypt.compareSync(req.body.password, result.password)) {
     // Check if account has been valdiated
         if (result.validated === "true") {
-            const token = jwt.sign(
-                {
-                    restaurantId: result._id,
-                },
-                String(process.env.TOKEN_KEY)
-            );
+            const token = req.body.stayLogged
+                ? jwt.sign(
+                    {
+                        restaurantId: String(result._id),
+                    },
+                    String(process.env.TOKEN_KEY)
+                )
+                : jwt.sign(
+                    {
+                        restaurantId: String(result._id),
+                    },
+                    String(process.env.TOKEN_KEY),
+                    { expiresIn: "2h" }
+                );
 
             res.status(200).json({
                 token: token,

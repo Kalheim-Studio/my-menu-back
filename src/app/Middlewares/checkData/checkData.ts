@@ -80,6 +80,10 @@ function validData(data: string, value: full, req: Request, parentObjectKey: str
         // Is string and non void string
         if (typeof value !== "string" || validator.isEmpty(String(value))) isValidData = false;
         break;
+    // Must be boolean
+    case "stayLogged":
+        if (typeof value !== "boolean") isValidData = false;
+        break;
     // All other fields are not allowed
     default:
         logger("checkData", "Other data: " + data + " " + typeof value);
@@ -87,10 +91,11 @@ function validData(data: string, value: full, req: Request, parentObjectKey: str
         break;
     }
 
-    // Sanitize data
-    if (parentObjectKey) req.body[parentObjectKey][data] = validator.escape(String(value));
-    else req.body[data] = validator.escape(String(value));
-
+    // Sanitize data if not boolean or number
+    if (typeof value !== "boolean" && typeof value !== "number") {
+        if (parentObjectKey) req.body[parentObjectKey][data] = validator.escape(String(value));
+        else req.body[data] = validator.escape(String(value));
+    }
     return isValidData;
 }
 

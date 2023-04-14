@@ -23,6 +23,7 @@ describe("checkData middleware test", () => {
                 email: "contact@johnsdinner.com",
                 password: "Abcdefgh1234!",
             },
+            stayLogged: true,
         };
 
         checkData(req, res, next);
@@ -140,6 +141,18 @@ describe("checkData middleware test", () => {
     it("Should send error if bad city", () => {
         req.body = {
             city: 1,
+        };
+
+        checkData(req, res, next);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.send).toHaveBeenCalledWith(errorMessage);
+    });
+
+    // Wrong stayLogged
+    it("Should send error if bad stayLogged", () => {
+        req.body = {
+            stayLogged: 1,
         };
 
         checkData(req, res, next);
