@@ -1,7 +1,7 @@
 // Methods
 import registerAccount from "./userControllers/registerAccount/registerAccount";
 import validateAccount from "./userControllers/validateAccount/validateAccount";
-import authentication from "./userControllers/authenticate/authenticate";
+import authenticate from "./userControllers/authenticate/authenticate";
 import getAllSubAccount from "./userControllers/getAllSubAccount";
 import createSubAccount from "./userControllers/createSubAccount";
 import deleteSubAccount from "./userControllers/deleteSubAccount";
@@ -15,7 +15,7 @@ const User = {
     // Account Validation
     validateAccount,
     // User authentication
-    authentication,
+    authenticate,
     // Get all sub account
     getAllSubAccount,
     // Sub account creation
