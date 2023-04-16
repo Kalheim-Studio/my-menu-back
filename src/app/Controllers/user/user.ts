@@ -2,8 +2,8 @@
 import registerAccount from "./userControllers/registerAccount/registerAccount";
 import validateAccount from "./userControllers/validateAccount/validateAccount";
 import authenticate from "./userControllers/authenticate/authenticate";
+import createSubAccount from "./userControllers/createSubAccount/createSubAccount";
 import getAllSubAccount from "./userControllers/getAllSubAccount";
-import createSubAccount from "./userControllers/createSubAccount";
 import deleteSubAccount from "./userControllers/deleteSubAccount";
 import getAccountInfo from "./userControllers/getAccountInfo";
 import resetPassword from "./userControllers/resetPassword";
@@ -16,10 +16,10 @@ const User = {
     validateAccount,
     // User authentication
     authenticate,
-    // Get all sub account
-    getAllSubAccount,
     // Sub account creation
     createSubAccount,
+    // Get all sub account
+    getAllSubAccount,
     // Sub account deletion
     deleteSubAccount,
     // Consult account

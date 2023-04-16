@@ -77,6 +77,7 @@ function validData(data: string, value: full, req: Request, parentObjectKey: str
     case "name":
     case "address":
     case "city":
+    case "role":
         // Is string and non void string
         if (typeof value !== "string" || validator.isEmpty(String(value))) isValidData = false;
         break;

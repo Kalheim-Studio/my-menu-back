@@ -12,7 +12,7 @@ const checkAuth = (req: Request, res: Response, next: NextFunction) => {
     // Checking token
     try {
     // Verifying token
-        const auth = jwt.verify(String(req.headers.token), String(process.env.TOKEN_KEY)) as TokenData;
+        jwt.verify(String(req.headers.token), String(process.env.TOKEN_KEY)) as TokenData;
         logger("checkAuth", "Tocken checked", { successMessage: "OK" });
         next();
     } catch (err) {
