@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import validator from "validator";
 import { logger } from "../../../Utils/logger/logger";
 
-type full = string | number | boolean | object;
+type AllowedDataType = string | number | boolean | object;
 
 // Checking Data
 function checkData(req: Request, res: Response, next: NextFunction) {
@@ -40,7 +40,7 @@ function parseBody(body: object, req: Request, parentObjectKey = ""): boolean {
     return isValidData;
 }
 
-function validData(data: string, value: full, req: Request, parentObjectKey: string): boolean {
+function validData(data: string, value: AllowedDataType, req: Request, parentObjectKey: string): boolean {
     let isValidData = true;
     let regExCheck: RegExpMatchArray | null;
     // Checking data field
