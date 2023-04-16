@@ -35,7 +35,7 @@ const registerAccount = async (req: Request, res: Response) => {
         lastname: req.body.lastname,
         password: hashedPwd,
         restaurantId: newRestaurant.id,
-        role: "restaurater",
+        role: "Owner",
     });
 
     // New entries validation

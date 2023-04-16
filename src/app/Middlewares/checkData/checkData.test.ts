@@ -149,6 +149,18 @@ describe("checkData middleware test", () => {
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
+    // Wrong role
+    it("Should send error if bad role", () => {
+        req.body = {
+            role: 1,
+        };
+
+        checkData(req, res, next);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.send).toHaveBeenCalledWith(errorMessage);
+    });
+
     // Wrong stayLogged
     it("Should send error if bad stayLogged", () => {
         req.body = {
