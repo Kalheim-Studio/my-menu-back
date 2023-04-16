@@ -15,7 +15,7 @@ jest.mock("../../../../../Utils/mailing/mailing", () => ({
 describe("Testing registerAccount controller", () => {
     dotenv.config();
 
-    const req: Request = { body: {} } as Request;
+    const req = { body: {} } as Request;
 
     beforeAll(async () => {
     // Database connexion

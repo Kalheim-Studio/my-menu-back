@@ -42,7 +42,7 @@ const createSubAccount = async (req: Request, res: Response) => {
             logger(__dirname, "Saving sub account");
             newUser.save();
             logger(__dirname, "Sub account creation", { successMessage: "OK" });
-            res.status(201).send("Account Created - WIP");
+            res.status(201).send("Account Created");
         }
     }
 };
