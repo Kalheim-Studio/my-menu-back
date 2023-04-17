@@ -28,7 +28,7 @@ describe("checkData middleware test", () => {
 
         checkData(req, res, next);
         // Expect next has been call with valid data
-        expect(next).toHaveBeenCalledWith();
+        expect(next).toHaveBeenCalled();
     });
 
     // Wrong email

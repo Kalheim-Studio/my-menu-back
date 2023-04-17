@@ -2,20 +2,33 @@ import request from "supertest";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
-import { v4 as uuid } from "uuid";
+import { Restaurant } from "../../../../Models/Restaurant";
 import { User } from "../../../../Models/User";
 import app from "../../../../app";
-import { isExportDeclaration } from "typescript";
 
 describe("getAllAccountsByRestaurantId controller test", () => {
     dotenv.config();
 
-    const restaurantId = uuid();
+    let restaurantId: string;
 
     beforeAll(async () => {
         await mongoose.connect(String(process.env.DATABASE_URI));
+        // Mocking main account
+        const newRestaurant = new Restaurant({
+            name: "John's Dinner",
+            address: "123 Sesame street",
+            postalCode: "01234",
+            city: "laputa",
+            phone: "(+33)102030405",
+            email: "johnsdinner@all-account.com",
+            password: "Abcdefgh1234!",
+            validated: "true",
+        });
+        await newRestaurant.save();
 
-        // Mocking account
+        restaurantId = String(newRestaurant._id);
+
+        // Mocking sub account
         const firstUser = new User({
             identifier: "John_Doe_" + restaurantId,
             firstname: "John",
@@ -50,12 +63,12 @@ describe("getAllAccountsByRestaurantId controller test", () => {
     afterAll(async () => {
     // Deleteing mocked data
         await User.deleteMany({ restaurantId: restaurantId });
-
+        await Restaurant.deleteOne({ _id: restaurantId });
         await mongoose.disconnect();
     });
 
     it("Should send error if bad authentication", async () => {
-        const authToken = jwt.sign({ restaurantId: "thisisabadtoken" }, "wrong key");
+        const authToken = jwt.sign({ restaurantId: "thisisabadtoken" }, String(process.env.TOKEN_KEY));
 
         const response = await request(app).get("/user/accounts-by-rest-id").set("token", authToken);
 
