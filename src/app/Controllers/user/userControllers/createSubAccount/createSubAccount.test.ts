@@ -17,7 +17,7 @@ describe("createSubAccount controller test", () => {
 
     beforeAll(async () => {
     // Database connection
-        await mongoose.connect(String(process.env.DATABASE_URI));
+        await mongoose.connect(String(process.env.DATABASE_TEST_URI));
     });
 
     beforeEach(() => {

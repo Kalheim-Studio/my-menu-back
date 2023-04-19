@@ -6,7 +6,7 @@ import checkAuth from "./checkAuth";
 
 import { Restaurant } from "../../Models/Restaurant";
 
-import colors, { bgYellow } from "colors";
+import colors from "colors";
 
 describe("checkAuth middleware test", () => {
     dotenv.config();
@@ -18,55 +18,33 @@ describe("checkAuth middleware test", () => {
 
     let restaurantId: string;
 
-    beforeAll(async () => {
-        await mongoose.connect(String(process.env.DATABASE_URI));
+    // beforeAll(async () => {
+    //     await mongoose.connect(String(process.env.DATABASE_TEST_URI));
 
-        const mockRestaurant = new Restaurant({
-            name: "John's Dinner",
-            address: "123 Sesame street",
-            postalCode: "01234",
-            city: "laputa",
-            phone: "(+33)102030405",
-            email: "John.Doe@check-auth.com",
-            password: "Abcdefgh1234!",
-            validated: "true"
-        });
+    //     const mockRestaurant = new Restaurant({
+    //         name: "John's Dinner",
+    //         address: "123 Sesame street",
+    //         postalCode: "01234",
+    //         city: "laputa",
+    //         phone: "(+33)102030405",
+    //         email: "John.Doe@check-auth.com",
+    //         password: "Abcdefgh1234!",
+    //         validated: "true"
+    //     });
 
-        restaurantId = String(mockRestaurant._id);
+    //     restaurantId = String(mockRestaurant._id);
 
-        await mockRestaurant.save();
-    });
-
-    afterAll(async ()=> {
-        
-        await Restaurant.deleteOne({_id: restaurantId})
-        await mongoose.disconnect();
-    });
-
-    // it("Checking valid unlimitted token",async () => {
-    // // Generating unlimited valid token
-    //     const token = jwt.sign({ restaurantId: restaurantId }, String(process.env.TOKEN_KEY));
-    //     req.headers = {
-    //         token: token,
-    //     };
-
-    //     checkAuth(req, res, next);
-
-    //     expect(next).toHaveBeenCalled();
+    //     await mockRestaurant.save();
     // });
 
-    // it("Checking valid limited token", () => {
-    // // Generatin 2 hours token
-    //     const token = jwt.sign({ restaurantId: restaurantId }, String(process.env.TOKEN_KEY), {
-    //         expiresIn: "2h",
-    //     });
-    //     req.headers = {
-    //         token: token,
-    //     };
+    beforeEach(() => {
+        jest.fn().mockRestore();
+    });
 
-    //     checkAuth(req, res, next);
-
-    //     expect(next).toHaveBeenCalled();
+    // afterAll(async ()=> {
+        
+    //     await Restaurant.deleteOne({_id: restaurantId})
+    //     await mongoose.disconnect();
     // });
 
     it("Checking expired token", () => {
@@ -84,45 +62,83 @@ describe("checkAuth middleware test", () => {
 
         checkAuth(req, res, next);
 
+        expect(next).not.toHaveBeenCalled();
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
-    // it("Checking token with unvalid secret key", () => {
-    // // Generating a token with an unvalid secret key
-    //     const token = jwt.sign({ restaurantId: restaurantId }, "Wrong_Secret_Key");
-    //     req.headers = {
-    //         token: token,
-    //     };
+    it("Checking token with unvalid secret key", () => {
+    // Generating a token with an unvalid secret key
+        const token = jwt.sign({ restaurantId: restaurantId }, "Wrong_Secret_Key");
+        req.headers = {
+            token: token,
+        };
 
-    //     checkAuth(req, res, next);
+        checkAuth(req, res, next);
 
-    //     expect(res.status).toHaveBeenCalledWith(400);
-    //     expect(res.send).toHaveBeenCalledWith(errorMessage);
-    // });
+        expect(next).not.toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.send).toHaveBeenCalledWith(errorMessage);
+    });
 
-    // it("Checking wrong format token", () => {
-    // // Wrong format token
-    //     req.headers = {
-    //         token: "thisabadformattoken",
-    //     };
+    it("Checking wrong format token", async () => {
+    // Wrong format token
+        req.headers = {
+            token: "thisabadformattoken",
+        };
 
-    //     checkAuth(req, res, next);
+        await checkAuth(req, res, next);
 
-    //     expect(res.status).toHaveBeenCalledWith(400);
-    //     expect(res.send).toHaveBeenCalledWith(errorMessage);
-    // });
+        expect(next).not.toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.send).toHaveBeenCalledWith(errorMessage);
+    });
 
-    // it("Checking unknwon account", () => {
-    //     const authToken = jwt.sign({ restauranId: "thisanunknownaccountid"}, String(process.env.TOKEN_KEY))
-    //     // Wrong format token
-    //         req.headers = {
-    //             token: authToken,
-    //         };
+    it("Checking unknwon account", async () => {
+        const authToken = jwt.sign({ restaurantId: "thisanunknownaccountid"}, String(process.env.TOKEN_KEY))
+        // Unknwon account
+            req.headers = {
+                token: authToken,
+            };
+            
+            // Mock la recherche de compte dans la base de données
+            Restaurant.findOne = jest.fn().mockResolvedValue(false);
+            await checkAuth(req, res, next);
+
+            // expect(next).not.toHaveBeenCalled();
+            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.send).toHaveBeenCalledWith(errorMessage);
+    });
+
+    it("Checking valid unlimitted token",async () => {
+        // Generating unlimited valid token
+            const token = jwt.sign({ restaurantId: "restaurantId" }, String(process.env.TOKEN_KEY));
+            req.headers = {
+                token: token,
+            };
+            
+            // Mock la recherche de compte dans la base de données
+            Restaurant.findOne = jest.fn().mockResolvedValue(true);
+
+            await checkAuth(req, res, next);
     
-    //         checkAuth(req, res, next);
+            expect(next).toHaveBeenCalled();
+        });
     
-    //         expect(res.status).toHaveBeenCalledWith(400);
-    //         expect(res.send).toHaveBeenCalledWith(errorMessage);
-    // });
+        it("Checking valid limited token",async () => {
+        // Generatin 2 hours token
+            const token = jwt.sign({ restaurantId: "restaurantId" }, String(process.env.TOKEN_KEY), {
+                expiresIn: "2h",
+            });
+            req.headers = {
+                token: token,
+            };
+
+            // Mock la recherche de compte dans la base de données
+            Restaurant.findOne = jest.fn().mockResolvedValue(true);
+    
+            await checkAuth(req, res, next);
+    
+            expect(next).toHaveBeenCalled();
+        });
 });

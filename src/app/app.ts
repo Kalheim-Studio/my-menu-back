@@ -28,6 +28,6 @@ app.use("/waiter", waiterRouter);
 // Order
 app.use("/order", orderRouter);
 // Any other route
-app.use("/", (req, res) => res.status(400).json({ answer: "Ressource not found." }));
+app.use("/", (req, res) => res.status(404).json({ answer: "Ressource not found." }));
 
 export default app;
