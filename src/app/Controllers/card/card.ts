@@ -1,7 +1,7 @@
-import getCard from "./methods/getCard";
-import createMenu from "./methods/createMenu";
-import createCardItem from "./methods/createCardItem";
-import getCardItemDetail from "./methods/getCardItemDetail";
+import getCard from "./services/getCard";
+import createMenu from "./services/createMenu";
+import createCardItem from "./services/createCardItem";
+import getCardItemDetail from "./services/getCardItemDetail";
 
 const card = {
     // Get Card

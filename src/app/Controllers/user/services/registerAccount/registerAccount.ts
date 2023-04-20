@@ -42,14 +42,19 @@ const registerAccount = async (req: Request, res: Response) => {
     const userValidate = newUser.validateSync();
     const restaurantValidate = newRestaurant.validateSync();
 
+    logger(__dirname, "Attempting to create account.");
+
     // If one of new user or restaurant is unvalid
     if (userValidate || restaurantValidate) {
         logger("registerAccount", "Error", { errorMessage: "Error in new user or new restaurant data." });
-        res.status(400).send("Error while registering");
+        // res.status(400).send("Error while registering");
+        throw new Error("Error while registering");
     } else {
     // Try saving data and sending mail & response
-        try {
+        // try {
             logger("registerAccount", "Creating account");
+            console.log(newRestaurant);
+            console.log(newUser);
             // Saving data
             await newRestaurant.save();
             await newUser.save();
@@ -59,12 +64,14 @@ const registerAccount = async (req: Request, res: Response) => {
             // Sending validation mail
             const mailResult = await sendAccountValidationMail(newRestaurant.email, newUser.lastname, token);
             logger("registerAccount", "Account created", { successMessage: mailResult });
-            res.status(201).send("Account created");
-        } catch (err: unknown) {
-            // Sending error
-            logger("registerAccount", "Error", { errorMessage: (err as Error).message });
-            res.status(400).send("Error while registering");
-        }
+            // res.status(201).send("Account created");
+            // return;
+        // } catch (err) {
+        //     // Sending error
+            // logger("registerAccount", "Error", { errorMessage: (err as Error).message });
+        //     // res.status(400).send("Error while registering");*
+        //     throw err;
+        // }
     }
 };
 

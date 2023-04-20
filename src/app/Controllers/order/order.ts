@@ -1,5 +1,5 @@
-import orderItem from "./methods/orderItem";
-import getOrderInfo from "./methods/getOrderInfo";
+import orderItem from "./services/orderItem";
+import getOrderInfo from "./services/getOrderInfo";
 const order = {
     // Order an item
     orderItem,

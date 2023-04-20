@@ -1,17 +1,28 @@
-// Methods
-import registerAccount from "./userControllers/registerAccount/registerAccount";
-import validateAccount from "./userControllers/validateAccount/validateAccount";
-import authenticate from "./userControllers/authenticate/authenticate";
-import createSubAccount from "./userControllers/createSubAccount/createSubAccount";
-import getAllAccountsByRestaurantId from "./userControllers/getAllAccountsByRestaurantId/getAllAccountsByRestaurantId";
-import deleteSubAccount from "./userControllers/deleteSubAccount";
-import getAccountInfo from "./userControllers/getAccountInfo";
-import resetPassword from "./userControllers/resetPassword";
-import changePassword from "./userControllers/changePassword";
+import type { Request, Response } from "express";
+// Services
+import registerAccount from "./services/registerAccount/registerAccount";
+import validateAccount from "./services/validateAccount/validateAccount";
+import authenticate from "./services/authenticate/authenticate";
+import createSubAccount from "./services/createSubAccount/createSubAccount";
+import getAllAccountsByRestaurantId from "./services/getAllAccountsByRestaurantId/getAllAccountsByRestaurantId";
+import deleteSubAccount from "./services/deleteSubAccount";
+import getAccountInfo from "./services/getAccountInfo";
+import resetPassword from "./services/resetPassword";
+import changePassword from "./services/changePassword";
+// Utils
+import { logger } from "../../../Utils/logger/logger";
 
 const User = {
     // Account registration
-    registerAccount,
+    registerAccount: async (req: Request, res: Response) => {
+        try {
+            await registerAccount(req, res);
+            res.status(202).send("Account created");
+        } catch (err) {
+            logger(__dirname, "Error", { errorMessage: (err as Error).message });
+            res.status(400).send("Error while registering");
+        }
+    },
     // Account Validation
     validateAccount,
     // User authentication
