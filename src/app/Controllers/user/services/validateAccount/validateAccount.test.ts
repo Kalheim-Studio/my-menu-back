@@ -1,61 +1,40 @@
-import request from "supertest";
 import type { Request } from "express";
-import mongoose from "mongoose";
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
 import { Restaurant } from "../../../../Models/Restaurant";
-import app from "../../../../app";
+import validateAccount from "./validateAccount";
 
 describe("Testing validateAccount controller", () => {
-    dotenv.config();
-    const req: Request = { body: {} } as Request;
-    const token = jwt.sign("test-token", String(process.env.TOKEN_KEY));
+    // Mocking request
+    const req: Request = { params: {} } as Request;
+    req.params = {
+        token: "thisisatoken",
+    };
 
-    // Mock new restaurant
-    beforeAll(async () => {
-    // Database connexion
-        await mongoose.connect(String(process.env.DATABASE_URI));
-
-        const newRestaurant = new Restaurant({
-            name: "John's Dinner",
-            address: "123 Sesame street",
-            postalCode: "01234",
-            city: "laputa",
-            phone: "(+33)102030405",
-            password: "Abcdefgh1234!",
-            email: "john.doe@validate-account.com",
-            validated: token,
+    it("Should throw error if no account to validate", async () => {
+    // Mocking failure update
+        Restaurant.updateOne = jest.fn().mockResolvedValue({
+            modifiedCount: 0,
         });
 
-        await newRestaurant.save();
-    });
-
-    // Delete mocked restaurant
-    afterAll(async () => {
-        const newRestaurant = await Restaurant.findOne({ email: "john.doe@validate-account.com" });
-
-        if (newRestaurant) await Restaurant.deleteOne({ email: "john.doe@validate-account.com" });
-
-        // Disconnecting from database
-        await mongoose.disconnect();
+        try {
+            await validateAccount(req);
+        } catch (err) {
+            // Expect error to has been thrown
+            expect(err).toBeDefined();
+            expect((err as Error).message).toBe("No account to validate have been found");
+        }
     });
 
     it("Should validate new account", async () => {
-        const response = await request(app).put("/user/validate-account/" + token);
+    // Mocking succesfull update
+        Restaurant.updateOne = jest.fn().mockResolvedValue({
+            modifiedCount: 1,
+        });
 
-        expect(response.status).toBe(200);
-        expect(response.text).toBe("Account has been validated");
-
-        const newRestaurant = await Restaurant.findOne({ email: "john.doe@mock.com" });
-        expect(newRestaurant).toBe(null);
-    });
-
-    it("Should return 400 if account already validated", async () => {
-        const response = await request(app)
-            .put("/user/validate-account/" + token)
-            .send(req.body);
-
-        expect(response.status).toBe(400);
-        expect(response.text).toBe("No account to validate have been found");
+        try {
+            await validateAccount(req);
+        } catch (err) {
+            // Error must not be throw
+            expect(err).not.toBeDefined();
+        }
     });
 });

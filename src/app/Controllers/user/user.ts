@@ -24,7 +24,15 @@ const User = {
         }
     },
     // Account Validation
-    validateAccount,
+    validateAccount: async (req: Request, res: Response) => {
+        try {
+            await validateAccount(req);
+            res.status(200).send("Account has been validated");
+        } catch (err) {
+            logger(__dirname, "Error", { errorMessage: (err as Error).message });
+            res.status(400).send("No account to validate has been found");
+        }
+    },
     // User authentication
     authenticate,
     // Sub account creation

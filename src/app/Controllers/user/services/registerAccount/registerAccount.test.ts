@@ -31,7 +31,7 @@ describe("Testing registerAccount controller", () => {
         try {
             await registerAccount(req);
         } catch (err) {
-            // Expect error to have benn throw
+            // Expect error to has been thrown
             expect(err).toBeDefined();
             expect((err as Error).message).toBe("Error while registering");
 
@@ -51,7 +51,7 @@ describe("Testing registerAccount controller", () => {
         try {
             await registerAccount(req);
         } catch (err) {
-            // Expect error to have benn throw
+            // Expect error to has been thrown
             expect(err).toBeDefined();
             expect((err as Error).message).toBe("Error while registering");
 
@@ -93,7 +93,7 @@ describe("Testing registerAccount controller", () => {
         await registerAccount(req);
     } catch (err) {
         console.log(colors.bgRed(String((err as DuplicateKeyError).code)));
-        // Expect error to have benn throw
+        // Expect error to has been thrown
         expect(err).toBeDefined();
         expect((err as DuplicateKeyError).code).toBe(11000);
 
