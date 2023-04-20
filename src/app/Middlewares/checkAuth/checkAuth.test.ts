@@ -1,43 +1,24 @@
 import type { Request, Response, NextFunction } from "express";
+import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import checkAuth from "./checkAuth";
 
+import { Restaurant } from "../../Models/Restaurant";
+
 describe("checkAuth middleware test", () => {
+    dotenv.config();
+
     const req: Request = { headers: {} } as Request;
     const res = { status: jest.fn().mockReturnThis(), send: jest.fn() } as unknown as Response;
     const next = jest.fn() as NextFunction;
     const errorMessage = "Authentication failed";
 
-    it("Checking valid unlimitted token", () => {
-    // Generating unlimited valid token
-        const token = jwt.sign({ restaurantId: "FakRestaurantId" }, String(process.env.TOKEN_KEY));
-        req.headers = {
-            token: token,
-        };
+    // let restaurantId: string;
 
-        checkAuth(req, res, next);
-
-        expect(next).toHaveBeenCalled();
-    });
-
-    it("Checking valid limited token", () => {
-    // Generatin 2 hours token
-        const token = jwt.sign({ restaurantId: "FakeRestaurantId" }, String(process.env.TOKEN_KEY), {
-            expiresIn: "2h",
-        });
-        req.headers = {
-            token: token,
-        };
-
-        checkAuth(req, res, next);
-
-        expect(next).toHaveBeenCalled();
-    });
-
-    it("Checking expired token", () => {
+    it("Checking expired token", async () => {
     // Generating expired 2h hours token (backdating it by 2.5h)
         const token = jwt.sign(
-            { restaurantId: "FakeRestaurantId", iat: Math.floor(Date.now() / 1000) - 60 * 60 * 2.5 },
+            { restaurantId: "restaurantId", iat: Math.floor(Date.now() / 1000) - 60 * 60 * 2.5 },
             String(process.env.TOKEN_KEY),
             {
                 expiresIn: "2h",
@@ -47,34 +28,85 @@ describe("checkAuth middleware test", () => {
             token: token,
         };
 
-        checkAuth(req, res, next);
+        await checkAuth(req, res, next);
 
+        expect(next).not.toHaveBeenCalled();
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
-    it("Checking token with unvalid secret key", () => {
+    it("Checking token with unvalid secret key", async () => {
     // Generating a token with an unvalid secret key
-        const token = jwt.sign({ restaurantId: "FakRestaurantId" }, "Wrong_Secret_Key");
+        const token = jwt.sign({ restaurantId: "restaurantId" }, "Wrong_Secret_Key");
         req.headers = {
             token: token,
         };
 
-        checkAuth(req, res, next);
+        await checkAuth(req, res, next);
 
+        expect(next).not.toHaveBeenCalled();
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
-    it("Checking wrong token", () => {
+    it("Checking wrong format token", async () => {
     // Wrong format token
         req.headers = {
             token: "thisabadformattoken",
         };
 
-        checkAuth(req, res, next);
+        await checkAuth(req, res, next);
 
+        expect(next).not.toHaveBeenCalled();
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
+    });
+
+    it("Checking unknwon account", async () => {
+        const authToken = jwt.sign({ restaurantId: "thisanunknownaccountid" }, String(process.env.TOKEN_KEY));
+        // Unknwon account
+        req.headers = {
+            token: authToken,
+        };
+
+        // Mock la recherche de compte dans la base de données
+        Restaurant.findOne = jest.fn().mockResolvedValue(false);
+        await checkAuth(req, res, next);
+
+        expect(next).not.toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.send).toHaveBeenCalledWith(errorMessage);
+    });
+
+    it("Checking valid unlimitted token", async () => {
+    // Generating unlimited valid token
+        const token = jwt.sign({ restaurantId: "restaurantId" }, String(process.env.TOKEN_KEY));
+        req.headers = {
+            token: token,
+        };
+
+        // Mock la recherche de compte dans la base de données
+        Restaurant.findOne = jest.fn().mockResolvedValue(true);
+
+        await checkAuth(req, res, next);
+
+        expect(next).toHaveBeenCalled();
+    });
+
+    it("Checking valid limited token", async () => {
+    // Generatin 2 hours token
+        const token = jwt.sign({ restaurantId: "restaurantId" }, String(process.env.TOKEN_KEY), {
+            expiresIn: "2h",
+        });
+        req.headers = {
+            token: token,
+        };
+
+        // Mock la recherche de compte dans la base de données
+        Restaurant.findOne = jest.fn().mockResolvedValue(true);
+
+        await checkAuth(req, res, next);
+
+        expect(next).toHaveBeenCalled();
     });
 });

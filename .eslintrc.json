@@ -17,7 +17,7 @@
     "indent": "error",
     "semi": ["error", "always"],
     "quotes": ["error", "double"],
-    "max-len": ["error", { "code": 110 }],
+    "max-len": ["error", { "code": 120 }],
     "no-multiple-empty-lines": [
       "error",
       {
