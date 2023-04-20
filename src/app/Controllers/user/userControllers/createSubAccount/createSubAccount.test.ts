@@ -27,7 +27,7 @@ describe("createSubAccount controller test", () => {
 
     beforeAll(async () => {
     // Database connection
-        await mongoose.connect(String(process.env.DATABASE_TEST_URI));
+        await mongoose.connect(String(process.env.DATABASE_URI));
     });
 
     beforeEach(() => {
@@ -74,10 +74,7 @@ describe("createSubAccount controller test", () => {
         // Mocking once error on checkData middleware
         (checkData as jest.Mock).mockImplementationOnce((req: Request, res: Response) => res.status(400).send("Error: Data are not valid.") )
 
-        const response = await request(app)
-            .post("/user/create-sub-account")
-            .set("token", authToken)
-            .send(req.body);
+        const response = await request(app).post("/user/create-sub-account").set("token", authToken).send(req.body);
 
         // Search for entry in database
         const userResult = await User.findOne({ identifier: "John_Doe_" + uid });
@@ -91,10 +88,7 @@ describe("createSubAccount controller test", () => {
     it("Should response error if role is owner", async () => {
         req.body.role = "Owner";
 
-        const response = await request(app)
-            .post("/user/create-sub-account")
-            .set("token", authToken)
-            .send(req.body);
+        const response = await request(app).post("/user/create-sub-account").set("token", authToken).send(req.body);
 
         // Search for entry in database
         const userResult = await User.findOne({ identifier: "John_Doe_" + uid });
@@ -113,10 +107,7 @@ describe("createSubAccount controller test", () => {
             role: "Manager",
         };
 
-        const response = await request(app)
-            .post("/user/create-sub-account")
-            .set("token", authToken)
-            .send(req.body);
+        const response = await request(app).post("/user/create-sub-account").set("token", authToken).send(req.body);
 
         // Search for entry in database
         const userResult = await User.findOne({ identifier: "John_Doe_" + uid });
@@ -128,10 +119,7 @@ describe("createSubAccount controller test", () => {
     });
 
     it("Should register new sub account", async () => {
-        const response = await request(app)
-            .post("/user/create-sub-account")
-            .set("token", authToken)
-            .send(req.body);
+        const response = await request(app).post("/user/create-sub-account").set("token", authToken).send(req.body);
 
         // Search for entry in database
         const userResult = await User.findOne({ identifier: "John_Doe_" + uid });

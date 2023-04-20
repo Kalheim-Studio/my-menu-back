@@ -1,12 +1,9 @@
 import type { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import checkAuth from "./checkAuth";
 
 import { Restaurant } from "../../Models/Restaurant";
-
-import colors from "colors";
 
 describe("checkAuth middleware test", () => {
     dotenv.config();
@@ -16,41 +13,12 @@ describe("checkAuth middleware test", () => {
     const next = jest.fn() as NextFunction;
     const errorMessage = "Authentication failed";
 
-    let restaurantId: string;
+    // let restaurantId: string;
 
-    // beforeAll(async () => {
-    //     await mongoose.connect(String(process.env.DATABASE_TEST_URI));
-
-    //     const mockRestaurant = new Restaurant({
-    //         name: "John's Dinner",
-    //         address: "123 Sesame street",
-    //         postalCode: "01234",
-    //         city: "laputa",
-    //         phone: "(+33)102030405",
-    //         email: "John.Doe@check-auth.com",
-    //         password: "Abcdefgh1234!",
-    //         validated: "true"
-    //     });
-
-    //     restaurantId = String(mockRestaurant._id);
-
-    //     await mockRestaurant.save();
-    // });
-
-    beforeEach(() => {
-        jest.fn().mockRestore();
-    });
-
-    // afterAll(async ()=> {
-        
-    //     await Restaurant.deleteOne({_id: restaurantId})
-    //     await mongoose.disconnect();
-    // });
-
-    it("Checking expired token", () => {
+    it("Checking expired token", async () => {
     // Generating expired 2h hours token (backdating it by 2.5h)
         const token = jwt.sign(
-            { restaurantId: restaurantId, iat: Math.floor(Date.now() / 1000) - 60 * 60 * 2.5 },
+            { restaurantId: "restaurantId", iat: Math.floor(Date.now() / 1000) - 60 * 60 * 2.5 },
             String(process.env.TOKEN_KEY),
             {
                 expiresIn: "2h",
@@ -60,21 +28,21 @@ describe("checkAuth middleware test", () => {
             token: token,
         };
 
-        checkAuth(req, res, next);
+        await checkAuth(req, res, next);
 
         expect(next).not.toHaveBeenCalled();
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
-    it("Checking token with unvalid secret key", () => {
+    it("Checking token with unvalid secret key", async () => {
     // Generating a token with an unvalid secret key
-        const token = jwt.sign({ restaurantId: restaurantId }, "Wrong_Secret_Key");
+        const token = jwt.sign({ restaurantId: "restaurantId" }, "Wrong_Secret_Key");
         req.headers = {
             token: token,
         };
 
-        checkAuth(req, res, next);
+        await checkAuth(req, res, next);
 
         expect(next).not.toHaveBeenCalled();
         expect(res.status).toHaveBeenCalledWith(400);
@@ -95,50 +63,50 @@ describe("checkAuth middleware test", () => {
     });
 
     it("Checking unknwon account", async () => {
-        const authToken = jwt.sign({ restaurantId: "thisanunknownaccountid"}, String(process.env.TOKEN_KEY))
+        const authToken = jwt.sign({ restaurantId: "thisanunknownaccountid" }, String(process.env.TOKEN_KEY));
         // Unknwon account
-            req.headers = {
-                token: authToken,
-            };
-            
-            // Mock la recherche de compte dans la base de données
-            Restaurant.findOne = jest.fn().mockResolvedValue(false);
-            await checkAuth(req, res, next);
+        req.headers = {
+            token: authToken,
+        };
 
-            // expect(next).not.toHaveBeenCalled();
-            expect(res.status).toHaveBeenCalledWith(400);
-            expect(res.send).toHaveBeenCalledWith(errorMessage);
+        // Mock la recherche de compte dans la base de données
+        Restaurant.findOne = jest.fn().mockResolvedValue(false);
+        await checkAuth(req, res, next);
+
+        expect(next).not.toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
-    it("Checking valid unlimitted token",async () => {
-        // Generating unlimited valid token
-            const token = jwt.sign({ restaurantId: "restaurantId" }, String(process.env.TOKEN_KEY));
-            req.headers = {
-                token: token,
-            };
-            
-            // Mock la recherche de compte dans la base de données
-            Restaurant.findOne = jest.fn().mockResolvedValue(true);
+    it("Checking valid unlimitted token", async () => {
+    // Generating unlimited valid token
+        const token = jwt.sign({ restaurantId: "restaurantId" }, String(process.env.TOKEN_KEY));
+        req.headers = {
+            token: token,
+        };
 
-            await checkAuth(req, res, next);
-    
-            expect(next).toHaveBeenCalled();
-        });
-    
-        it("Checking valid limited token",async () => {
-        // Generatin 2 hours token
-            const token = jwt.sign({ restaurantId: "restaurantId" }, String(process.env.TOKEN_KEY), {
-                expiresIn: "2h",
-            });
-            req.headers = {
-                token: token,
-            };
+        // Mock la recherche de compte dans la base de données
+        Restaurant.findOne = jest.fn().mockResolvedValue(true);
 
-            // Mock la recherche de compte dans la base de données
-            Restaurant.findOne = jest.fn().mockResolvedValue(true);
-    
-            await checkAuth(req, res, next);
-    
-            expect(next).toHaveBeenCalled();
+        await checkAuth(req, res, next);
+
+        expect(next).toHaveBeenCalled();
+    });
+
+    it("Checking valid limited token", async () => {
+    // Generatin 2 hours token
+        const token = jwt.sign({ restaurantId: "restaurantId" }, String(process.env.TOKEN_KEY), {
+            expiresIn: "2h",
         });
+        req.headers = {
+            token: token,
+        };
+
+        // Mock la recherche de compte dans la base de données
+        Restaurant.findOne = jest.fn().mockResolvedValue(true);
+
+        await checkAuth(req, res, next);
+
+        expect(next).toHaveBeenCalled();
+    });
 });
