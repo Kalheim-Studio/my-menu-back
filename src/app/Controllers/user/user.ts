@@ -34,7 +34,17 @@ const User = {
         }
     },
     // User authentication
-    authenticate,
+    authenticate: async (req: Request, res: Response) => {
+        try {
+            const authToken = await authenticate(req);
+            res.status(200).json({
+                token: authToken,
+            });
+        } catch (err) {
+            console.log(err);
+            res.status(400).send((err as Error).message);
+        }
+    },
     // Sub account creation
     createSubAccount,
     // Get all sub account by restaurant id

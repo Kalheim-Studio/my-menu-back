@@ -1,103 +1,103 @@
-import request from "supertest";
 import type { Request } from "express";
-import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { Restaurant } from "../../../../Models/Restaurant";
-import app from "../../../../app";
+import authenticate from "./authenticate";
+import TokenData from "../../../../Types/TokenData";
 
 describe("Testing authenticate controller", () => {
     dotenv.config();
     const req: Request = { body: {} } as Request;
-    const token = jwt.sign("test-token", String(process.env.TOKEN_KEY));
 
-    // Mock new restaurant
-    beforeAll(async () => {
-        await mongoose.connect(String(process.env.DATABASE_URI));
-        const hashedPwd = await bcrypt.hash("Abcdefgh1234!", parseInt(String(process.env.SALT_ROUND)));
+    it("Should throw error if wrong login", async () => {
+        req.body = {
+            email: "thierry.agnelli@gmail.com",
+            password: "Abcdefgh1234!l",
+            stayLogged: true,
+        };
 
-        const newRestaurant = new Restaurant({
-            name: "John's Dinner",
-            address: "123 Sesame street",
-            postalCode: "01234",
-            city: "laputa",
-            phone: "(+33)102030405",
-            password: hashedPwd,
-            email: "john.doe@authentication.com",
-            validated: token,
+        // Mock database request
+        Restaurant.findOne = jest.fn().mockResolvedValue({
+            password: "mockPassword",
+            validated: "true",
         });
 
-        await newRestaurant.save();
+        let authToken;
+
+        try {
+            authToken = await authenticate(req);
+        } catch (err) {
+            // Expect token to not be defined
+            expect(authToken).not.toBeDefined();
+            // Expect error to has been thrown
+            expect(err).toBeDefined();
+            expect((err as Error).message).toBe("Login or password incorrect");
+        }
     });
 
-    // Delete mocked restaurant
-    afterAll(async () => {
-        const newRestaurant = await Restaurant.findOne({ email: "john.doe@authentication.com" });
-
-        if (newRestaurant) await Restaurant.deleteOne({ email: "john.doe@authentication.com" });
-
-        // Disconnecting from database
-        await mongoose.disconnect();
-    });
-
-    it("Error in email login Data", async () => {
-        req.body = {
-            email: "john.doeauthentication.com",
-            password: "Abcdefgh1234!",
-        };
-
-        const response = await request(app).post("/user/authentication").send(req.body);
-
-        expect(response.status).toBe(400);
-        expect(response.text).toBe("Error: Data are not valid.");
-    });
-
-    it("Error in password Data", async () => {
-        req.body = {
-            email: "john.doe@authentication.com",
-            password: "Abcdefgh1234",
-        };
-
-        const response = await request(app).post("/user/authentication").send(req.body);
-
-        expect(response.status).toBe(400);
-        expect(response.text).toBe("Error: Data are not valid.");
-    });
-
-    it("Error wrong login", async () => {
-        req.body = {
-            email: "johndoe@authentication.com",
-            password: "Abcdefgh1234!",
-        };
-
-        const response = await request(app).post("/user/authentication").send(req.body);
-
-        expect(response.status).toBe(400);
-        expect(response.text).toBe("Email ou mot de passe incorrect");
-    });
-
-    it("Error wrong password", async () => {
-        req.body = {
-            email: "john.doe@authentication.com",
-            password: "Abcdefgh1234!!",
-        };
-
-        const response = await request(app).post("/user/authentication").send(req.body);
-
-        expect(response.status).toBe(400);
-        expect(response.text).toBe("Email ou mot de passe incorrect");
-    });
-
-    it("Error account not validated", async () => {
+    it("Should throw error if account not validated", async () => {
+    // Mock request body
         req.body = {
             email: "john.doe@authentication.com",
             password: "Abcdefgh1234!",
+            stayLogged: true,
         };
 
-        const response = await request(app).post("/user/authentication").send(req.body);
-        expect(response.status).toBe(400);
-        expect(response.text).toBe("Le compte n'a pas encore été validé");
+        // Mock hashed password
+        const hashedPwd = await bcrypt.hash(req.body.password, parseInt(String(process.env.SALT_ROUND)));
+
+        // Mock database request
+        Restaurant.findOne = jest.fn().mockResolvedValue({
+            password: hashedPwd,
+            validated: "not-validated",
+        });
+
+        let authToken;
+
+        try {
+            authToken = await authenticate(req);
+        } catch (err) {
+            // Expect token to not be defined
+            expect(authToken).not.toBeDefined();
+            // Expect error to has been thrown
+            expect(err).toBeDefined();
+            expect((err as Error).message).toBe("Account not validated");
+        }
+
+        expect(authToken).not.toBeDefined();
+    });
+
+    it("Authenticate OK, stayLogged : false", async () => {
+        req.body = {
+            email: "john.doe@authentication.com",
+            password: "Abcdefgh1234!",
+            stayLogged: false,
+        };
+
+        // Mock hashed password
+        const hashedPwd = await bcrypt.hash(req.body.password, parseInt(String(process.env.SALT_ROUND)));
+
+        // Mock database request
+        Restaurant.findOne = jest.fn().mockResolvedValue({
+            password: hashedPwd,
+            validated: "true",
+        });
+
+        let authToken;
+
+        try {
+            authToken = await authenticate(req);
+        } catch (err) {
+            expect(err).not.toBeDefined();
+        }
+
+        const { iat, exp } = jwt.decode(String(authToken)) as TokenData;
+
+        // Expect token to be defined
+        expect(authToken).toBeDefined();
+        // Expect to have 2h expiration
+        expect(exp - iat).toBe(7200);
     });
 
     it("Authenticate OK, stayLogged : true", async () => {
@@ -107,46 +107,28 @@ describe("Testing authenticate controller", () => {
             stayLogged: true,
         };
 
-        // Validate account
-        await Restaurant.updateOne({ email: "john.doe@authentication.com" }, { validated: "true" });
+        // Mock hashed password
+        const hashedPwd = await bcrypt.hash(req.body.password, parseInt(String(process.env.SALT_ROUND)));
 
-        const jwtSignSpy = jest.spyOn(jwt, "sign");
+        // Mock database request
+        Restaurant.findOne = jest.fn().mockResolvedValue({
+            password: hashedPwd,
+            validated: "true",
+        });
 
-        const response = await request(app).post("/user/authentication").send(req.body);
+        let authToken;
 
-        expect(response.status).toBe(200);
-        expect(response.body.token).toBeDefined();
-        expect(jwtSignSpy).toHaveBeenCalledWith(
-            {
-                restaurantId: expect.any(String),
-            },
-            String(process.env.TOKEN_KEY)
-        );
+        try {
+            authToken = await authenticate(req);
+        } catch (err) {
+            expect(err).not.toBeDefined();
+        }
 
-        jwtSignSpy.mockRestore();
-    });
+        const { exp } = jwt.decode(String(authToken)) as TokenData;
 
-    it("Authenticate OK, stayLogged : false", async () => {
-        req.body = {
-            email: "john.doe@authentication.com",
-            password: "Abcdefgh1234!",
-            stayLogged: false,
-        };
-        const jwtSignSpy = jest.spyOn(jwt, "sign");
-
-        const response = await request(app).post("/user/authentication").send(req.body);
-
-        expect(response.status).toBe(200);
-
-        expect(response.body.token).toBeDefined();
-        expect(jwtSignSpy).toHaveBeenCalledWith(
-            {
-                restaurantId: expect.any(String),
-            },
-            String(process.env.TOKEN_KEY),
-            { expiresIn: "2h" }
-        );
-
-        jwtSignSpy.mockRestore();
+        // Expect token to be defined
+        expect(authToken).toBeDefined();
+        // Expect to have 2h expiration
+        expect(exp).not.toBeDefined();
     });
 });

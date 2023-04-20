@@ -1,10 +1,10 @@
-import type { Request, Response } from "express";
+import type { Request } from "express";
 import { logger } from "../../../../../Utils/logger/logger";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Restaurant } from "../../../../Models/Restaurant";
 
-const authentication = async (req: Request, res: Response) => {
+const authentication = async (req: Request) => {
     logger("authenticate", "Authentication attempt");
 
     // Searching for account to connect
@@ -28,19 +28,16 @@ const authentication = async (req: Request, res: Response) => {
                     String(process.env.TOKEN_KEY),
                     { expiresIn: "2h" }
                 );
-
-            res.status(200).json({
-                token: token,
-            });
+            return token;
         } else {
             // Response not validated
             logger("autenticate", "Error", { errorMessage: "Account not validated" });
-            res.status(400).send("Le compte n'a pas encore été validé");
+            throw new Error("Account not validated");
         }
     } else {
     // Response email or password incorrect
         logger("autenticate", "Error", { errorMessage: "Login or password incorrect" });
-        res.status(400).send("Email ou mot de passe incorrect");
+        throw new Error("Login or password incorrect");
     }
 };
 
