@@ -16,8 +16,8 @@ const User = {
     // Account registration
     registerAccount: async (req: Request, res: Response) => {
         try {
-            await registerAccount(req, res);
-            res.status(202).send("Account created");
+            await registerAccount(req);
+            res.status(201).send("Account created");
         } catch (err) {
             logger(__dirname, "Error", { errorMessage: (err as Error).message });
             res.status(400).send("Error while registering");

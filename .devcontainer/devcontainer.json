@@ -1,7 +1,4 @@
 {
   "name": "My-Menu-back",
-  "dockerFile": "./Dockerfile",
-  "runArgs": [
-    "--memory=4g" // Spécifiez la mémoire allouée en ajoutant cette ligne
-  ]
+  "dockerFile": "./Dockerfile"
 }
