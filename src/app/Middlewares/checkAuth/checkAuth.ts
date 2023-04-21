@@ -12,7 +12,9 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
     // Checking token
     try {
     // Verifying token
-        const { restaurantId } = jwt.verify(String(req.headers.token), String(process.env.TOKEN_KEY)) as TokenData;
+        const authToken = String(req.headers.authorization).replace("Bearer ", "");
+        const { restaurantId } = jwt.verify(authToken, String(process.env.TOKEN_KEY)) as TokenData;
+
         logger(__dirname, "Token checked", { infoMessage: "Checking account in database" });
 
         // Checking in database

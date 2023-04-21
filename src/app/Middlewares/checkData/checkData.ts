@@ -13,7 +13,7 @@ function checkData(req: Request, res: Response, next: NextFunction) {
 
     // Continue processing request if data are valid
     if (isValidData) {
-        logger("checkData", "Checking Data", { successMessage: "OK" });
+        logger("checkData", "Data checked", { successMessage: "OK" });
         next();
     }
     // If not send error

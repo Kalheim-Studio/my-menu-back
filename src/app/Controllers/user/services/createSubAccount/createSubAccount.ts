@@ -13,7 +13,9 @@ const createSubAccount = async (req: Request, res: Response) => {
         res.status(400).send("Error while registering.");
     } else {
     // Getting restaurantId from auth token
-        const { restaurantId } = jwt.decode(String(req.headers.token)) as TokenData;
+        const authToken = String(req.headers.authorization).replace("Bearer ", "");
+
+        const { restaurantId } = jwt.decode(authToken) as TokenData;
 
         // Hashing password before saving
         const hashedPwd = req.body.password

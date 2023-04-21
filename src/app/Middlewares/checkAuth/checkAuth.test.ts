@@ -13,8 +13,6 @@ describe("checkAuth middleware test", () => {
     const next = jest.fn() as NextFunction;
     const errorMessage = "Authentication failed";
 
-    // let restaurantId: string;
-
     it("Checking expired token", async () => {
     // Generating expired 2h hours token (backdating it by 2.5h)
         const token = jwt.sign(
@@ -25,7 +23,7 @@ describe("checkAuth middleware test", () => {
             }
         );
         req.headers = {
-            token: token,
+            authToken: token,
         };
 
         await checkAuth(req, res, next);
@@ -39,7 +37,7 @@ describe("checkAuth middleware test", () => {
     // Generating a token with an unvalid secret key
         const token = jwt.sign({ restaurantId: "restaurantId" }, "Wrong_Secret_Key");
         req.headers = {
-            token: token,
+            authToken: token,
         };
 
         await checkAuth(req, res, next);
@@ -52,7 +50,7 @@ describe("checkAuth middleware test", () => {
     it("Checking wrong format token", async () => {
     // Wrong format token
         req.headers = {
-            token: "thisabadformattoken",
+            authToken: "thisabadformattoken",
         };
 
         await checkAuth(req, res, next);
@@ -65,9 +63,7 @@ describe("checkAuth middleware test", () => {
     it("Checking unknwon account", async () => {
         const authToken = jwt.sign({ restaurantId: "thisanunknownaccountid" }, String(process.env.TOKEN_KEY));
         // Unknwon account
-        req.headers = {
-            token: authToken,
-        };
+        req.headers.authorization = "Bearer " + authToken;
 
         // Mock la recherche de compte dans la base de données
         Restaurant.findOne = jest.fn().mockResolvedValue(false);
@@ -80,10 +76,8 @@ describe("checkAuth middleware test", () => {
 
     it("Checking valid unlimitted token", async () => {
     // Generating unlimited valid token
-        const token = jwt.sign({ restaurantId: "restaurantId" }, String(process.env.TOKEN_KEY));
-        req.headers = {
-            token: token,
-        };
+        const authToken = jwt.sign({ restaurantId: "restaurantId" }, String(process.env.TOKEN_KEY));
+        req.headers.authorization = "Bearer " + authToken;
 
         // Mock la recherche de compte dans la base de données
         Restaurant.findOne = jest.fn().mockResolvedValue(true);
@@ -95,12 +89,10 @@ describe("checkAuth middleware test", () => {
 
     it("Checking valid limited token", async () => {
     // Generatin 2 hours token
-        const token = jwt.sign({ restaurantId: "restaurantId" }, String(process.env.TOKEN_KEY), {
+        const authToken = jwt.sign({ restaurantId: "restaurantId" }, String(process.env.TOKEN_KEY), {
             expiresIn: "2h",
         });
-        req.headers = {
-            token: token,
-        };
+        req.headers.authorization = "Bearer " + authToken;
 
         // Mock la recherche de compte dans la base de données
         Restaurant.findOne = jest.fn().mockResolvedValue(true);
