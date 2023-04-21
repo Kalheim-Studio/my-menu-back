@@ -4,8 +4,6 @@ import { User } from "../../../../Models/User";
 import { sendAccountValidationMail } from "../../../../../Utils/mailing/mailing";
 import registerAccount from "./registerAccount";
 
-import colors from "colors";
-
 // Mocking send email funtion
 jest.mock("../../../../../Utils/mailing/mailing", () => ({
     sendAccountValidationMail: jest.fn().mockResolvedValue(undefined),
@@ -28,16 +26,19 @@ describe("Testing registerAccount controller", () => {
             },
         };
 
+        let error;
+
         try {
             await registerAccount(req);
         } catch (err) {
-            // Expect error to has been thrown
-            expect(err).toBeDefined();
-            expect((err as Error).message).toBe("Error while registering");
-
+            error = err;
             // Check mail not sended
             expect(sendAccountValidationMail).not.toHaveBeenCalled();
         }
+
+        // Expect error to has been thrown
+        expect(error).toBeDefined();
+        expect((error as Error).message).toBe("Error while registering");
     });
 
     it("Should fail if restaurant missing", async () => {
@@ -92,7 +93,6 @@ describe("Testing registerAccount controller", () => {
     try {
         await registerAccount(req);
     } catch (err) {
-        console.log(colors.bgRed(String((err as DuplicateKeyError).code)));
         // Expect error to has been thrown
         expect(err).toBeDefined();
         expect((err as DuplicateKeyError).code).toBe(11000);
@@ -131,7 +131,7 @@ describe("Testing registerAccount controller", () => {
             // Check mail sended
             expect(sendAccountValidationMail).toHaveBeenCalled();
         } catch (err) {
-            // Error must not be throw
+            // Expect error to has been not thrown
             expect(err).not.toBeDefined();
         }
     });

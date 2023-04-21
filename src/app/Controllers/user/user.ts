@@ -41,12 +41,20 @@ const User = {
                 token: authToken,
             });
         } catch (err) {
-            console.log(err);
+            logger(__dirname, "Error", { errorMessage: (err as Error).message });
             res.status(400).send((err as Error).message);
         }
     },
     // Sub account creation
-    createSubAccount,
+    createSubAccount: async (req: Request, res: Response) => {
+        try {
+            await createSubAccount(req);
+            res.status(201).send("Account Created");
+        } catch (err) {
+            logger(__dirname, "Error", { errorMessage: (err as Error).message });
+            res.status(400).send("Error while registering.");
+        }
+    },
     // Get all sub account by restaurant id
     getAllAccountsByRestaurantId,
     // Sub account deletion
