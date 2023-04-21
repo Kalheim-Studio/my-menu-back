@@ -24,16 +24,19 @@ describe("Testing authenticate controller", () => {
         });
 
         let authToken;
+        let error;
 
         try {
             authToken = await authenticate(req);
         } catch (err) {
-            // Expect token to not be defined
-            expect(authToken).not.toBeDefined();
-            // Expect error to has been thrown
-            expect(err).toBeDefined();
-            expect((err as Error).message).toBe("Login or password incorrect");
+            error = err;
         }
+
+        // Expect token to not be defined
+        expect(authToken).not.toBeDefined();
+        // Expect error to has been thrown
+        expect(error).toBeDefined();
+        expect((error as Error).message).toBe("Login or password incorrect");
     });
 
     it("Should throw error if account not validated", async () => {
@@ -54,18 +57,19 @@ describe("Testing authenticate controller", () => {
         });
 
         let authToken;
+        let error;
 
         try {
             authToken = await authenticate(req);
         } catch (err) {
-            // Expect token to not be defined
-            expect(authToken).not.toBeDefined();
-            // Expect error to has been thrown
-            expect(err).toBeDefined();
-            expect((err as Error).message).toBe("Account not validated");
+            error = err;
         }
 
+        // Expect token to not be defined
         expect(authToken).not.toBeDefined();
+        // Expect error to has been thrown
+        expect(error).toBeDefined();
+        expect((error as Error).message).toBe("Account not validated");
     });
 
     it("Authenticate OK, stayLogged : false", async () => {
@@ -85,15 +89,18 @@ describe("Testing authenticate controller", () => {
         });
 
         let authToken;
+        let error;
 
         try {
             authToken = await authenticate(req);
         } catch (err) {
-            expect(err).not.toBeDefined();
+            error = err;
         }
 
         const { iat, exp } = jwt.decode(String(authToken)) as TokenData;
 
+        // Expect error to has not been thrown
+        expect(error).not.toBeDefined();
         // Expect token to be defined
         expect(authToken).toBeDefined();
         // Expect to have 2h expiration
@@ -117,15 +124,18 @@ describe("Testing authenticate controller", () => {
         });
 
         let authToken;
+        let error;
 
         try {
             authToken = await authenticate(req);
         } catch (err) {
-            expect(err).not.toBeDefined();
+            error = err;
         }
 
         const { exp } = jwt.decode(String(authToken)) as TokenData;
 
+        // Expect error to has not been thrown
+        expect(error).not.toBeDefined();
         // Expect token to be defined
         expect(authToken).toBeDefined();
         // Expect to have 2h expiration

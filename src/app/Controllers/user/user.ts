@@ -20,7 +20,7 @@ const User = {
             res.status(201).send("Account created");
         } catch (err) {
             logger(__dirname, "Error", { errorMessage: (err as Error).message });
-            res.status(400).send("Error while registering");
+            res.status(500).send("Error while registering");
         }
     },
     // Account Validation
@@ -30,7 +30,7 @@ const User = {
             res.status(200).send("Account has been validated");
         } catch (err) {
             logger(__dirname, "Error", { errorMessage: (err as Error).message });
-            res.status(400).send("No account to validate has been found");
+            res.status(409).send("No account to validate has been found");
         }
     },
     // User authentication
@@ -42,7 +42,7 @@ const User = {
             });
         } catch (err) {
             logger(__dirname, "Error", { errorMessage: (err as Error).message });
-            res.status(400).send((err as Error).message);
+            res.status(401).send((err as Error).message);
         }
     },
     // Sub account creation
@@ -52,7 +52,7 @@ const User = {
             res.status(201).send("Account Created");
         } catch (err) {
             logger(__dirname, "Error", { errorMessage: (err as Error).message });
-            res.status(400).send("Error while registering.");
+            res.status(500).send("Error while registering.");
         }
     },
     // Get all sub account by restaurant id
@@ -63,7 +63,7 @@ const User = {
                 subAccounts: results,
             });
         } catch (err) {
-            res.status(400).send("Request Error");
+            res.status(500).send("Request Error");
         }
     },
     // Sub account deletion

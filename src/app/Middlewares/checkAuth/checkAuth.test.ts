@@ -12,6 +12,7 @@ describe("checkAuth middleware test", () => {
     const res = { status: jest.fn().mockReturnThis(), send: jest.fn() } as unknown as Response;
     const next = jest.fn() as NextFunction;
     const errorMessage = "Authentication failed";
+    const errorCode = 401;
 
     it("Checking expired token", async () => {
     // Generating expired 2h hours token (backdating it by 2.5h)
@@ -29,7 +30,7 @@ describe("checkAuth middleware test", () => {
         await checkAuth(req, res, next);
 
         expect(next).not.toHaveBeenCalled();
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(errorCode);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
@@ -43,7 +44,7 @@ describe("checkAuth middleware test", () => {
         await checkAuth(req, res, next);
 
         expect(next).not.toHaveBeenCalled();
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(errorCode);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
@@ -56,7 +57,7 @@ describe("checkAuth middleware test", () => {
         await checkAuth(req, res, next);
 
         expect(next).not.toHaveBeenCalled();
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(errorCode);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
@@ -70,7 +71,7 @@ describe("checkAuth middleware test", () => {
         await checkAuth(req, res, next);
 
         expect(next).not.toHaveBeenCalled();
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(errorCode);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 

@@ -28,7 +28,7 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
         logger(__dirname, "Error", { errorMessage: (err as Error).message });
     }
 
-    if (!validAuth) res.status(400).send("Authentication failed");
+    if (!validAuth) res.status(401).send("Authentication failed");
     else next();
 };
 

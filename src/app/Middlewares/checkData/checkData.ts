@@ -19,7 +19,7 @@ function checkData(req: Request, res: Response, next: NextFunction) {
     // If not send error
     else {
         logger("checkData", "Error", { errorMessage: "Data are not valid" });
-        res.status(400).send("Error: Data are not valid.");
+        res.status(422).send("Error: Data are not valid.");
     }
 }
 
