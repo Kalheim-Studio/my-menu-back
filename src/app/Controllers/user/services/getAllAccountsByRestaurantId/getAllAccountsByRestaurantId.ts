@@ -1,21 +1,20 @@
-import type { Request, Response } from "express";
+import type { Request } from "express";
 import jwt from "jsonwebtoken";
+import { User } from "../../../../Models/User";
 import { logger } from "../../../../../Utils/logger/logger";
 import TokenData from "../../../../Types/TokenData";
-import { User } from "../../../../Models/User";
 
-const getAllAccountsByRestaurantId = async (req: Request, res: Response) => {
+const getAllAccountsByRestaurantId = async (req: Request) => {
     logger(__dirname, "Get all account by restaurant Id");
     // Getting restaurantId from token
-    const { restaurantId } = jwt.decode(String(req.headers.token)) as TokenData;
+    const authToken = String(req.headers.authorization).replace("Bearer ", "");
+    const { restaurantId } = jwt.decode(authToken) as TokenData;
 
     // Getting sub account which are not "Owner" by restaurant id
-    const response = await User.find({
+    const results = await User.find({
         $and: [{ restaurantId: restaurantId }, { role: { $ne: "Owner" } }],
     });
-    res.status(200).json({
-        subAccounts: response,
-    });
+    return results;
 };
 
 export default getAllAccountsByRestaurantId;

@@ -56,7 +56,16 @@ const User = {
         }
     },
     // Get all sub account by restaurant id
-    getAllAccountsByRestaurantId,
+    getAllAccountsByRestaurantId: async (req: Request, res: Response) => {
+        try {
+            const results = await getAllAccountsByRestaurantId(req);
+            res.status(200).json({
+                subAccounts: results,
+            });
+        } catch (err) {
+            res.status(400).send("Request Error");
+        }
+    },
     // Sub account deletion
     deleteSubAccount,
     // Consult account

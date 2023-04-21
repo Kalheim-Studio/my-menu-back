@@ -10,7 +10,7 @@ describe("createSubAccount controller test", () => {
     // Mocking request
     const req = { body: {}, headers: {} } as Request;
 
-    // Mocking database save function
+    // Mocking database create function
     User.prototype.save = jest.fn();
 
     beforeEach(() => {
@@ -80,7 +80,7 @@ describe("createSubAccount controller test", () => {
             error = err;
         }
 
-        // Expect error to has been not thrown
+        // Expect error to has not been thrown
         expect(error).not.toBeDefined();
     });
 });

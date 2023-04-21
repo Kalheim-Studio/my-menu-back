@@ -13,7 +13,6 @@ const createSubAccount = async (req: Request) => {
     } else {
     // Getting restaurantId from auth token
         const authToken = String(req.headers.authorization).replace("Bearer ", "");
-
         const { restaurantId } = jwt.decode(authToken) as TokenData;
 
         // Hashing password before saving
