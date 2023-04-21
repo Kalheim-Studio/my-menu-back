@@ -4,9 +4,13 @@ import { User } from "../../../../Models/User";
 import { sendAccountValidationMail } from "../../../../../Utils/mailing/mailing";
 import registerAccount from "./registerAccount";
 
+interface DuplicateKeyError extends Error {
+  code: number;
+}
+
 // Mocking send email funtion
 jest.mock("../../../../../Utils/mailing/mailing", () => ({
-    sendAccountValidationMail: jest.fn().mockResolvedValue(undefined),
+    sendAccountValidationMail: jest.fn().mockResolvedValue({}),
 }));
 
 describe("Testing registerAccount controller", () => {
@@ -32,13 +36,14 @@ describe("Testing registerAccount controller", () => {
             await registerAccount(req);
         } catch (err) {
             error = err;
-            // Check mail not sended
-            expect(sendAccountValidationMail).not.toHaveBeenCalled();
         }
+
+        // expect mail has not sended
+        expect(sendAccountValidationMail).not.toHaveBeenCalled();
 
         // Expect error to has been thrown
         expect(error).toBeDefined();
-        expect((error as Error).message).toBe("Error while registering");
+        expect((error as Error).message).toBe("Error in new user or new restaurant data");
     });
 
     it("Should fail if restaurant missing", async () => {
@@ -49,57 +54,60 @@ describe("Testing registerAccount controller", () => {
             lastname: "Doe",
         };
 
+        let error;
+
         try {
             await registerAccount(req);
         } catch (err) {
-            // Expect error to has been thrown
-            expect(err).toBeDefined();
-            expect((err as Error).message).toBe("Error while registering");
-
-            // Check mail not sended
-            expect(sendAccountValidationMail).not.toHaveBeenCalled();
+            error = err;
         }
+
+        // Expect error to has been thrown
+        expect(error).toBeDefined();
+        expect((error as Error).message).toBe("Error in new user or new restaurant data");
+
+        // Check mail not sended
+        expect(sendAccountValidationMail).not.toHaveBeenCalled();
     });
 
     it("Should failed if account already exist", async () => {
     // Mocking saving models function
+        Restaurant.prototype.save = jest.fn(() => {
+            const error = new Error() as DuplicateKeyError;
+            error.code = 11000;
+            throw error;
+        });
 
-    interface DuplicateKeyError extends Error {
-      code: number;
-    }
+        // Mocking req.body
+        req.body = {
+            identifier: "John_Doe",
+            firstname: "John",
+            lastname: "Doe",
+            restaurant: {
+                name: "John's Dinner",
+                address: "123 Sesame street",
+                postalCode: "01234",
+                city: "laputa",
+                phone: "(+33)102030405",
+                email: "John.Doe@register-account.com",
+                password: "Abcdefgh1234!",
+            },
+        };
 
-    Restaurant.prototype.save = jest.fn(() => {
-        const error = new Error() as DuplicateKeyError;
-        error.code = 11000;
-        throw error;
-    });
+        let error;
 
-    // Mocking req.body
-    req.body = {
-        identifier: "John_Doe",
-        firstname: "John",
-        lastname: "Doe",
-        restaurant: {
-            name: "John's Dinner",
-            address: "123 Sesame street",
-            postalCode: "01234",
-            city: "laputa",
-            phone: "(+33)102030405",
-            email: "John.Doe@register-account.com",
-            password: "Abcdefgh1234!",
-        },
-    };
+        try {
+            await registerAccount(req);
+        } catch (err) {
+            error = err;
+        }
 
-    try {
-        await registerAccount(req);
-    } catch (err) {
         // Expect error to has been thrown
-        expect(err).toBeDefined();
-        expect((err as DuplicateKeyError).code).toBe(11000);
+        expect(error).toBeDefined();
+        expect((error as DuplicateKeyError).code).toBe(11000);
 
         // Check mail not sended
         expect(sendAccountValidationMail).not.toHaveBeenCalled();
-    }
     });
 
     it("Should register new account", async () => {
@@ -123,16 +131,21 @@ describe("Testing registerAccount controller", () => {
             },
         };
 
+        let error;
+
         try {
             await registerAccount(req);
-            // Expect data registered
-            expect(Restaurant.prototype.save).toHaveBeenCalled();
-            expect(User.prototype.save).toHaveBeenCalled();
-            // Check mail sended
-            expect(sendAccountValidationMail).toHaveBeenCalled();
         } catch (err) {
-            // Expect error to has been not thrown
-            expect(err).not.toBeDefined();
+            error = err;
         }
+
+        // Expect error to has been not thrown
+        expect(error).not.toBeDefined();
+
+        // Expect data registered
+        expect(Restaurant.prototype.save).toHaveBeenCalled();
+        expect(User.prototype.save).toHaveBeenCalled();
+        // Check mail sended
+        expect(sendAccountValidationMail).toHaveBeenCalled();
     });
 });

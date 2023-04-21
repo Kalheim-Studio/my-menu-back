@@ -28,15 +28,15 @@ const authentication = async (req: Request) => {
                     String(process.env.TOKEN_KEY),
                     { expiresIn: "2h" }
                 );
+
+            logger(__dirname, "Authentication", { successMessage: "Granted" });
             return token;
         } else {
             // Response not validated
-            logger("autenticate", "Error", { errorMessage: "Account not validated" });
             throw new Error("Account not validated");
         }
     } else {
     // Response email or password incorrect
-        logger("autenticate", "Error", { errorMessage: "Login or password incorrect" });
         throw new Error("Login or password incorrect");
     }
 };

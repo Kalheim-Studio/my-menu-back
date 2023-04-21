@@ -46,9 +46,8 @@ const registerAccount = async (req: Request) => {
 
     // If one of new user or restaurant is unvalid
     if (userValidate || restaurantValidate) {
-        logger(__dirname, "Error", { errorMessage: "Error in new user or new restaurant data." });
-        // throw error
-        throw new Error("Error while registering");
+    // throw error
+        throw new Error("Error in new user or new restaurant data");
     } else {
         logger(__dirname, "Creating account");
 

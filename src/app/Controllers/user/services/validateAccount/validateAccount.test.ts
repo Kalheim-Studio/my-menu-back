@@ -15,13 +15,17 @@ describe("Testing validateAccount controller", () => {
             modifiedCount: 0,
         });
 
+        let error;
+
         try {
             await validateAccount(req);
         } catch (err) {
-            // Expect error to has been thrown
-            expect(err).toBeDefined();
-            expect((err as Error).message).toBe("No account to validate have been found");
+            error = err;
         }
+
+        // Expect error to has been thrown
+        expect(error).toBeDefined();
+        expect((error as Error).message).toBe("No account to validate have been found");
     });
 
     it("Should validate new account", async () => {
@@ -30,11 +34,15 @@ describe("Testing validateAccount controller", () => {
             modifiedCount: 1,
         });
 
+        let error;
+
         try {
             await validateAccount(req);
         } catch (err) {
-            // Error must not be throw
-            expect(err).not.toBeDefined();
+            error = err;
         }
+
+        // Error must not be throw
+        expect(error).not.toBeDefined();
     });
 });
