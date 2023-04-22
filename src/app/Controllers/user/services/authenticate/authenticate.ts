@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import { Restaurant } from "../../../../Models/Restaurant";
 
 const authentication = async (req: Request) => {
-    logger("authenticate", "Authentication attempt");
+    logger(__dirname, "Authentication attempt");
 
     // Searching for account to connect
     const result = await Restaurant.findOne({ email: req.body.email });

@@ -52,7 +52,9 @@ const User = {
             res.status(201).send("Account Created");
         } catch (err) {
             logger(__dirname, "Error", { errorMessage: (err as Error).message });
-            res.status(500).send("Error while registering.");
+
+            if ((err as Error).name === "duplicate_account") res.status(409).send("Error while registering.");
+            else res.status(500).send("Error while registering.");
         }
     },
     // Get all sub account by restaurant id

@@ -15,6 +15,15 @@ const createSubAccount = async (req: Request) => {
         const authToken = String(req.headers.authorization).replace("Bearer ", "");
         const { restaurantId } = jwt.decode(authToken) as TokenData;
 
+        // Check if a sub account already exist for this restaurant
+        const results = await User.find({ restaurantId: restaurantId, identifier: req.body.identifier });
+
+        if (results.length > 0) {
+            const error = new Error("An account with this identifier already exist for this restaurant");
+            error.name = "duplicate_account";
+            throw error;
+        }
+
         // Hashing password before saving
         const hashedPwd = req.body.password
             ? await bcrypt.hash(req.body.password, parseInt(String(process.env.SALT_ROUND)))

@@ -7,7 +7,7 @@ import { logger } from "../../../Utils/logger/logger";
 const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
     let validAuth = false;
 
-    logger("checkAuth", "Checking token");
+    logger(__dirname, "Checking token");
 
     // Checking token
     try {
@@ -21,7 +21,7 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
         const result = await Restaurant.findOne({ _id: restaurantId });
 
         if (result) {
-            logger("checkAuth", "Token checked", { successMessage: "OK" });
+            logger(__dirname, "Token checked", { successMessage: "OK" });
             validAuth = true;
         } else logger(__dirname, "Error", { errorMessage: "No Account has been found." });
     } catch (err) {
