@@ -20,16 +20,20 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
         // Checking in database
         const result = await Restaurant.findOne({ _id: restaurantId });
 
+        // If an account has been found
         if (result) {
-            logger(__dirname, "Token checked", { successMessage: "OK" });
-            validAuth = true;
+            // Check if account has been validated
+            validAuth = result.validated === "true";
+            if (!validAuth) logger(__dirname, "Token checked", { successMessage: "OK" });
+            else logger(__dirname, "Token checked", { errorMessage: "Account not validated" });
         } else logger(__dirname, "Error", { errorMessage: "No Account has been found." });
     } catch (err) {
         logger(__dirname, "Error", { errorMessage: (err as Error).message });
     }
 
-    if (!validAuth) res.status(401).send("Authentication failed");
-    else next();
+    // Grant access to route if valid authentication
+    if (validAuth) next();
+    else res.status(401).send("Authentication failed");
 };
 
 export default checkAuth;
