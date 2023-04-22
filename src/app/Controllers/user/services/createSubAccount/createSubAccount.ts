@@ -1,19 +1,28 @@
-import type { Request, Response } from "express";
+import type { Request } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { logger } from "../../../../../Utils/logger/logger";
 import TokenData from "../../../../Types/TokenData";
 import { User } from "../../../../Models/User";
 
-const createSubAccount = async (req: Request, res: Response) => {
+const createSubAccount = async (req: Request) => {
     logger(__dirname, "Account creation");
     // Can't create an Owner role sub account
     if (req.body.role == "Owner") {
-        logger(__dirname, "Error", { errorMessage: "Can't create sub accoutn with Owner role" });
-        res.status(400).send("Error while registering.");
+        throw new Error("Can't create sub account with Owner role");
     } else {
     // Getting restaurantId from auth token
-        const { restaurantId } = jwt.decode(String(req.headers.token)) as TokenData;
+        const authToken = String(req.headers.authorization).replace("Bearer ", "");
+        const { restaurantId } = jwt.decode(authToken) as TokenData;
+
+        // Check if a sub account already exist for this restaurant
+        const results = await User.find({ restaurantId: restaurantId, identifier: req.body.identifier });
+
+        if (results.length > 0) {
+            const error = new Error("An account with this identifier already exist for this restaurant");
+            error.name = "duplicate_account";
+            throw error;
+        }
 
         // Hashing password before saving
         const hashedPwd = req.body.password
@@ -35,14 +44,12 @@ const createSubAccount = async (req: Request, res: Response) => {
 
         // If user sub acocunt not valid
         if (isValidNewUser) {
-            logger(__dirname, "Error", { errorMessage: "Error on new account data field" });
-            res.status(400).send("Error while registering.");
+            throw new Error("Error on new account data field");
         } else {
             // savinng new user sub account
             logger(__dirname, "Saving sub account");
             newUser.save();
             logger(__dirname, "Sub account creation", { successMessage: "OK" });
-            res.status(201).send("Account Created");
         }
     }
 };

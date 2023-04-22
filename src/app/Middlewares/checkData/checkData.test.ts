@@ -6,6 +6,7 @@ describe("checkData middleware test", () => {
     const res = { status: jest.fn().mockReturnThis(), send: jest.fn() } as unknown as Response;
     const next = jest.fn() as NextFunction;
     const errorMessage = "Error: Data are not valid.";
+    const errorCode = 422;
 
     // Valid Data
     it("should be valid data", () => {
@@ -39,7 +40,7 @@ describe("checkData middleware test", () => {
 
         checkData(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(errorCode);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
@@ -51,7 +52,7 @@ describe("checkData middleware test", () => {
 
         checkData(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(errorCode);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
@@ -63,7 +64,7 @@ describe("checkData middleware test", () => {
 
         checkData(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(errorCode);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
@@ -74,7 +75,7 @@ describe("checkData middleware test", () => {
         };
         checkData(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(errorCode);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
@@ -86,7 +87,7 @@ describe("checkData middleware test", () => {
 
         checkData(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(errorCode);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
@@ -98,7 +99,7 @@ describe("checkData middleware test", () => {
 
         checkData(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(errorCode);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
@@ -109,7 +110,7 @@ describe("checkData middleware test", () => {
         };
         checkData(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(errorCode);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
@@ -121,7 +122,7 @@ describe("checkData middleware test", () => {
 
         checkData(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(errorCode);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
@@ -133,7 +134,7 @@ describe("checkData middleware test", () => {
 
         checkData(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(errorCode);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
@@ -145,7 +146,7 @@ describe("checkData middleware test", () => {
 
         checkData(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(errorCode);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
@@ -157,7 +158,7 @@ describe("checkData middleware test", () => {
 
         checkData(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(errorCode);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
@@ -169,7 +170,7 @@ describe("checkData middleware test", () => {
 
         checkData(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(errorCode);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
@@ -181,7 +182,7 @@ describe("checkData middleware test", () => {
 
         checkData(req, res, next);
 
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(errorCode);
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 

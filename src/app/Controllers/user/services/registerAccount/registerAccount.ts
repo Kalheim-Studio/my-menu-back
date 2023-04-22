@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { Request } from "express";
 import { User } from "../../../../Models/User";
 import { Restaurant } from "../../../../Models/Restaurant";
 import bcrypt from "bcrypt";
@@ -7,7 +7,7 @@ import { v4 as uuidV4 } from "uuid";
 import { sendAccountValidationMail } from "../../../../../Utils/mailing/mailing";
 import { logger } from "../../../../../Utils/logger/logger";
 
-const registerAccount = async (req: Request, res: Response) => {
+const registerAccount = async (req: Request) => {
     // Creating validation token
     const token = jwt.sign(uuidV4(), String(process.env.TOKEN_KEY));
 
@@ -42,29 +42,24 @@ const registerAccount = async (req: Request, res: Response) => {
     const userValidate = newUser.validateSync();
     const restaurantValidate = newRestaurant.validateSync();
 
+    logger(__dirname, "Attempting to create account.");
+
     // If one of new user or restaurant is unvalid
     if (userValidate || restaurantValidate) {
-        logger("registerAccount", "Error", { errorMessage: "Error in new user or new restaurant data." });
-        res.status(400).send("Error while registering");
+    // throw error
+        throw new Error("Error in new user or new restaurant data");
     } else {
-    // Try saving data and sending mail & response
-        try {
-            logger("registerAccount", "Creating account");
-            // Saving data
-            await newRestaurant.save();
-            await newUser.save();
+        logger(__dirname, "Creating account");
 
-            logger("registerAccount", "Account saved", { successMessage: "OK" });
+        // Saving data
+        await newRestaurant.save();
+        await newUser.save();
 
-            // Sending validation mail
-            const mailResult = await sendAccountValidationMail(newRestaurant.email, newUser.lastname, token);
-            logger("registerAccount", "Account created", { successMessage: mailResult });
-            res.status(201).send("Account created");
-        } catch (err: unknown) {
-            // Sending error
-            logger("registerAccount", "Error", { errorMessage: (err as Error).message });
-            res.status(400).send("Error while registering");
-        }
+        logger(__dirname, "Account saved", { successMessage: "OK" });
+
+        // Sending validation mail
+        const mailResult = await sendAccountValidationMail(newRestaurant.email, newUser.lastname, token);
+        logger(__dirname, "Account created", { successMessage: mailResult });
     }
 };
 

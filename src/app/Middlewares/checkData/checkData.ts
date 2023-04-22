@@ -6,20 +6,20 @@ type AllowedDataType = string | number | boolean | object;
 
 // Checking Data
 function checkData(req: Request, res: Response, next: NextFunction) {
-    logger("checkData", "Checking Data");
+    logger(__dirname, "Checking Data");
 
     // Parse req.body for checking data.
     const isValidData = parseBody(req.body, req);
 
     // Continue processing request if data are valid
     if (isValidData) {
-        logger("checkData", "Checking Data", { successMessage: "OK" });
+        logger(__dirname, "Data checked", { successMessage: "OK" });
         next();
     }
     // If not send error
     else {
-        logger("checkData", "Error", { errorMessage: "Data are not valid" });
-        res.status(400).send("Error: Data are not valid.");
+        logger(__dirname, "Error", { errorMessage: "Data are not valid" });
+        res.status(422).send("Error: Data are not valid.");
     }
 }
 
@@ -87,7 +87,7 @@ function validData(data: string, value: AllowedDataType, req: Request, parentObj
         break;
     // All other fields are not allowed
     default:
-        logger("checkData", "Other data: " + data + " " + typeof value);
+        logger(__dirname, "Other data: " + data + " " + typeof value);
         isValidData = false;
         break;
     }
