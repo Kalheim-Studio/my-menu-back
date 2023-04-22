@@ -1,9 +1,10 @@
-import type { Request, Response } from "express";
+import type { Request } from "express";
+import { logger } from "../../../../Utils/logger/logger";
 
-const getOrderInfo = (req: Request, res: Response) => {
-    res.status(200).json({
-        orderInfo: "OrderInfo - WIP",
-    });
+const getOrderInfo = async (req: Request) => {
+    const message = "Get order info - WIP";
+    logger(__dirname, "Error", { errorMessage: message });
+    throw new Error(message);
 };
 
 export default getOrderInfo;

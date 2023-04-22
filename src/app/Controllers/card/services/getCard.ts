@@ -1,9 +1,10 @@
-import type { Request, Response } from "express";
+import type { Request } from "express";
+import { logger } from "../../../../Utils/logger/logger";
 
-const getCard = (req: Request, res: Response) => {
-    res.status(200).json({
-        card: ["Card - WIP"],
-    });
+const getCard = async (req: Request) => {
+    const message = "Get Card - WIP";
+    logger(__dirname, "Error", { errorMessage: message });
+    throw new Error(message);
 };
 
 export default getCard;

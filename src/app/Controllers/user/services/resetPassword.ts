@@ -1,8 +1,11 @@
-import type { Request, Response } from "express";
+import type { Request } from "express";
+import { logger } from "../../../../Utils/logger/logger";
 
-const resetPassword = (req: Request, res: Response) => {
+const resetPassword = (req: Request) => {
     // send mail
-    res.status(200).send("Reset password Mail send - WIP");
+    const message = "Reset password - WIP";
+    logger(__dirname, "Error", { errorMessage: message });
+    throw new Error(message);
 };
 
 export default resetPassword;

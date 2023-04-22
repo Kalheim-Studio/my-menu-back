@@ -1,8 +1,11 @@
-import type { Request, Response } from "express";
+import type { Request } from "express";
+import { logger } from "../../../../Utils/logger/logger";
 
-const changePassword = (req: Request, res: Response) => {
+const changePassword = (req: Request) => {
     // verif token
-    res.status(200).send("Password has been changed - WIP");
+    const message = "Change password - WIP";
+    logger(__dirname, "Error", { errorMessage: message });
+    throw new Error(message);
 };
 
 export default changePassword;

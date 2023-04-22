@@ -69,13 +69,37 @@ const User = {
         }
     },
     // Sub account deletion
-    deleteSubAccount,
+    deleteSubAccount: async (req: Request, res: Response) => {
+        try {
+            await deleteSubAccount(req);
+        } catch (err) {
+            res.status(404).send((err as Error).message);
+        }
+    },
     // Consult account
-    getAccountInfo,
+    getAccountInfo: async (req: Request, res: Response) => {
+        try {
+            await getAccountInfo(req);
+        } catch (err) {
+            res.status(404).send((err as Error).message);
+        }
+    },
     // Reset password
-    resetPassword,
+    resetPassword: async (req: Request, res: Response) => {
+        try {
+            await resetPassword(req);
+        } catch (err) {
+            res.status(404).send((err as Error).message);
+        }
+    },
     // Change password
-    changePassword,
+    changePassword: async (req: Request, res: Response) => {
+        try {
+            await changePassword(req);
+        } catch (err) {
+            res.status(404).send((err as Error).message);
+        }
+    },
 };
 
 export default User;
