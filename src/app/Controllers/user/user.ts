@@ -5,7 +5,7 @@ import validateAccount from "./services/validateAccount/validateAccount";
 import authenticate from "./services/authenticate/authenticate";
 import createSubAccount from "./services/createSubAccount/createSubAccount";
 import getAllAccountsByRestaurantId from "./services/getAllAccountsByRestaurantId/getAllAccountsByRestaurantId";
-import deleteSubAccount from "./services/deleteSubAccount";
+import deleteSubAccount from "./services/deleteSubAccount/deleteSubAccount";
 import getAccountInfo from "./services/getAccountInfo";
 import resetPassword from "./services/resetPassword";
 import changePassword from "./services/changePassword";
@@ -68,12 +68,14 @@ const User = {
             res.status(500).send("Request Error");
         }
     },
-    // Sub account deletion
+    // Sub account deleting
     deleteSubAccount: async (req: Request, res: Response) => {
         try {
             await deleteSubAccount(req);
+            res.status(200).send("Account deleted");
         } catch (err) {
-            res.status(404).send((err as Error).message);
+            if ((err as Error).name === "no-account") res.status(404).send((err as Error).message);
+            else res.status(500).send("Error while deleting account");
         }
     },
     // Consult account
