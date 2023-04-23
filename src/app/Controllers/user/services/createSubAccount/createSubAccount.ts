@@ -2,7 +2,7 @@ import type { Request } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { logger } from "../../../../../Utils/logger/logger";
-import TokenData from "../../../../Types/TokenData";
+import AuthToken from "../../../../Types/AuthToken";
 import { User } from "../../../../Models/User";
 
 const createSubAccount = async (req: Request) => {
@@ -13,7 +13,7 @@ const createSubAccount = async (req: Request) => {
     } else {
     // Getting restaurantId from auth token
         const authToken = String(req.headers.authorization).replace("Bearer ", "");
-        const { restaurantId } = jwt.decode(authToken) as TokenData;
+        const { restaurantId } = jwt.decode(authToken) as AuthToken;
 
         // Check if a sub account already exist for this restaurant
         const results = await User.find({ restaurantId: restaurantId, identifier: req.body.identifier });

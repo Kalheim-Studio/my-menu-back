@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import TokenData from "../../Types/TokenData";
+import AuthToken from "../../Types/AuthToken";
 import { Restaurant } from "../../Models/Restaurant";
 import { logger } from "../../../Utils/logger/logger";
 
@@ -13,7 +13,7 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
     try {
     // Verifying token
         const authToken = String(req.headers.authorization).replace("Bearer ", "");
-        const { restaurantId } = jwt.verify(authToken, String(process.env.TOKEN_KEY)) as TokenData;
+        const { restaurantId } = jwt.verify(authToken, String(process.env.TOKEN_KEY)) as AuthToken;
 
         logger(__dirname, "Token checked", { infoMessage: "Checking account in database" });
 
@@ -24,7 +24,8 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
         if (result) {
             // Check if account has been validated
             validAuth = result.validated === "true";
-            if (!validAuth) logger(__dirname, "Token checked", { successMessage: "OK" });
+
+            if (validAuth) logger(__dirname, "Token checked", { successMessage: "OK" });
             else logger(__dirname, "Token checked", { errorMessage: "Account not validated" });
         } else logger(__dirname, "Error", { errorMessage: "No Account has been found." });
     } catch (err) {

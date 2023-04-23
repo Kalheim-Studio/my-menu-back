@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { Restaurant } from "../../../../Models/Restaurant";
 import authenticate from "./authenticate";
-import TokenData from "../../../../Types/TokenData";
+import AuthToken from "../../../../Types/AuthToken";
 
 describe("Testing authenticate controller", () => {
     dotenv.config();
@@ -97,7 +97,7 @@ describe("Testing authenticate controller", () => {
             error = err;
         }
 
-        const { iat, exp } = jwt.decode(String(authToken)) as TokenData;
+        const { iat, exp } = jwt.decode(String(authToken)) as AuthToken;
 
         // Expect error to has not been thrown
         expect(error).not.toBeDefined();
@@ -132,7 +132,7 @@ describe("Testing authenticate controller", () => {
             error = err;
         }
 
-        const { exp } = jwt.decode(String(authToken)) as TokenData;
+        const { exp } = jwt.decode(String(authToken)) as AuthToken;
 
         // Expect error to has not been thrown
         expect(error).not.toBeDefined();

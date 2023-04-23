@@ -15,7 +15,7 @@ function logger(origin: string, message: string, information: Information = {}) 
                 ? colors.red(information.errorMessage.red)
                 : "";
 
-    console.log(`${Date.now()} - ${origin} - ${message}${subMessage ? ` - ${subMessage}` : ""}`);
+    console.log(`${Date.now()} - ${origin} - ${message}${subMessage ? ` : ${subMessage}` : ""}`);
 }
 
 export { logger };

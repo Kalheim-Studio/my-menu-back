@@ -1,7 +1,7 @@
-interface TokenData {
+interface AuthToken {
   restaurantId: string;
   iat: number;
   exp: number;
 }
 
-export default TokenData;
+export default AuthToken;
