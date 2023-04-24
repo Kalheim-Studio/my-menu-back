@@ -1,14 +1,13 @@
 import type { Request } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import dotenv from "dotenv";
 import { Restaurant } from "../../../../Models/Restaurant";
 import authenticate from "./authenticate";
 import AuthToken from "../../../../Types/AuthToken";
 
 describe("Testing authenticate controller", () => {
-    dotenv.config();
     const req: Request = { body: {} } as Request;
+    const salt_round = 1;
 
     it("Should throw error if wrong login", async () => {
         req.body = {
@@ -33,7 +32,7 @@ describe("Testing authenticate controller", () => {
         }
 
         // Expect token to not be defined
-        expect(authToken).not.toBeDefined();
+        expect(authToken).toBeUndefined();
         // Expect error to has been thrown
         expect(error).toBeDefined();
         expect((error as Error).message).toBe("Login or password incorrect");
@@ -48,7 +47,7 @@ describe("Testing authenticate controller", () => {
         };
 
         // Mock hashed password
-        const hashedPwd = await bcrypt.hash(req.body.password, parseInt(String(process.env.SALT_ROUND)));
+        const hashedPwd = await bcrypt.hash(req.body.password, salt_round);
 
         // Mock database request
         Restaurant.findOne = jest.fn().mockResolvedValue({
@@ -66,7 +65,7 @@ describe("Testing authenticate controller", () => {
         }
 
         // Expect token to not be defined
-        expect(authToken).not.toBeDefined();
+        expect(authToken).toBeUndefined();
         // Expect error to has been thrown
         expect(error).toBeDefined();
         expect((error as Error).message).toBe("Account not validated");
@@ -80,7 +79,7 @@ describe("Testing authenticate controller", () => {
         };
 
         // Mock hashed password
-        const hashedPwd = await bcrypt.hash(req.body.password, parseInt(String(process.env.SALT_ROUND)));
+        const hashedPwd = await bcrypt.hash(req.body.password, salt_round);
 
         // Mock database request
         Restaurant.findOne = jest.fn().mockResolvedValue({
@@ -100,7 +99,7 @@ describe("Testing authenticate controller", () => {
         const { iat, exp } = jwt.decode(String(authToken)) as AuthToken;
 
         // Expect error to has not been thrown
-        expect(error).not.toBeDefined();
+        expect(error).toBeUndefined();
         // Expect token to be defined
         expect(authToken).toBeDefined();
         // Expect to have 2h expiration
@@ -115,7 +114,7 @@ describe("Testing authenticate controller", () => {
         };
 
         // Mock hashed password
-        const hashedPwd = await bcrypt.hash(req.body.password, parseInt(String(process.env.SALT_ROUND)));
+        const hashedPwd = await bcrypt.hash(req.body.password, salt_round);
 
         // Mock database request
         Restaurant.findOne = jest.fn().mockResolvedValue({
@@ -135,10 +134,10 @@ describe("Testing authenticate controller", () => {
         const { exp } = jwt.decode(String(authToken)) as AuthToken;
 
         // Expect error to has not been thrown
-        expect(error).not.toBeDefined();
+        expect(error).toBeUndefined();
         // Expect token to be defined
         expect(authToken).toBeDefined();
         // Expect to have 2h expiration
-        expect(exp).not.toBeDefined();
+        expect(exp).toBeUndefined();
     });
 });

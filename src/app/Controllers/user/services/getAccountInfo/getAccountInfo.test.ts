@@ -67,7 +67,7 @@ describe("getAccountInfo controller test", () => {
         }
         console.log(typeof result, result);
 
-        expect(error).not.toBeDefined();
+        expect(error).toBeUndefined();
         expect(result).toEqual({
             owner: {
                 identifier: "identifier",

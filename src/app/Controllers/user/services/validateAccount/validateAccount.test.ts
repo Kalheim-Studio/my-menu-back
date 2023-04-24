@@ -43,6 +43,6 @@ describe("Testing validateAccount controller", () => {
         }
 
         // Error must not be throw
-        expect(error).not.toBeDefined();
+        expect(error).toBeUndefined();
     });
 });

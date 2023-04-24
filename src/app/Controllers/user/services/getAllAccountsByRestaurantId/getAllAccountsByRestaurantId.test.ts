@@ -1,11 +1,9 @@
 import type { Request } from "express";
-import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { User } from "../../../../Models/User";
 import getAllAccountsByRestaurantId from "./getAllAccountsByRestaurantId";
 
 describe("getAllAccountsByRestaurantId controller test", () => {
-    dotenv.config();
     const req = { headers: {} } as Request;
 
     it("Should get all account by res Id", async () => {
@@ -14,7 +12,7 @@ describe("getAllAccountsByRestaurantId controller test", () => {
             {
                 restaurantId: "restaurantId",
             },
-            String(process.env.TOKEN_KEY)
+            "secrettokenkey"
         );
 
         req.headers = {
@@ -22,7 +20,7 @@ describe("getAllAccountsByRestaurantId controller test", () => {
         };
 
         // Mocking database read function
-        User.find = jest.fn().mockResolvedValue("Seme results");
+        User.find = jest.fn().mockResolvedValue("Some results");
 
         let error;
         let results;
@@ -34,7 +32,7 @@ describe("getAllAccountsByRestaurantId controller test", () => {
         }
 
         // Expect error to has not been thrown
-        expect(error).not.toBeDefined();
+        expect(error).toBeUndefined();
         // Expect some results to has been return
         expect(results).toBeDefined();
     });
