@@ -1,12 +1,9 @@
-import dotenv from "dotenv";
 import type { Request } from "express";
 import jwt from "jsonwebtoken";
 import createSubAccount from "./createSubAccount";
 import { User } from "../../../../Models/User";
 
 describe("createSubAccount controller test", () => {
-    dotenv.config();
-
     // Mocking request
     const req = { body: {}, headers: {} } as Request;
 
@@ -30,7 +27,7 @@ describe("createSubAccount controller test", () => {
             {
                 restaurantId: "restaurantId",
             },
-            String(process.env.TOKEN_KEY)
+            "secrettokenkey"
         );
 
         req.headers = {
@@ -101,6 +98,6 @@ describe("createSubAccount controller test", () => {
         }
 
         // Expect error to has not been thrown
-        expect(error).not.toBeDefined();
+        expect(error).toBeUndefined();
     });
 });

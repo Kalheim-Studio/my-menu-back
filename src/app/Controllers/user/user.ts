@@ -6,7 +6,7 @@ import authenticate from "./services/authenticate/authenticate";
 import createSubAccount from "./services/createSubAccount/createSubAccount";
 import getAllAccountsByRestaurantId from "./services/getAllAccountsByRestaurantId/getAllAccountsByRestaurantId";
 import deleteSubAccount from "./services/deleteSubAccount/deleteSubAccount";
-import getAccountInfo from "./services/getAccountInfo";
+import getAccountInfo from "./services/getAccountInfo/getAccountInfo";
 import resetPassword from "./services/resetPassword";
 import changePassword from "./services/changePassword";
 // Utils
@@ -81,7 +81,8 @@ const User = {
     // Consult account
     getAccountInfo: async (req: Request, res: Response) => {
         try {
-            await getAccountInfo(req);
+            const result = await getAccountInfo(req);
+            res.status(200).json(result);
         } catch (err) {
             res.status(404).send((err as Error).message);
         }

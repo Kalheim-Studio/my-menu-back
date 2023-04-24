@@ -4,7 +4,7 @@ import { logger } from "../logger/logger";
 const NAME = "[NO_REPLY]MyMenu";
 
 // Transporter for mail sending (in a function to be called after dotenv.config())
-function createTransporterFunction() {
+function createTransporter() {
     return nodemailer.createTransport({
         host: String(process.env.MAIL_HOST),
         port: parseInt(String(process.env.MAIL_PORT)),
@@ -25,12 +25,7 @@ text-decoration:none;
 margin:0 10em;`;
 
 // Validation mail
-const sendAccountValidationMail = async (
-    email: string,
-    name: string,
-    token: string,
-    createTransporter = createTransporterFunction
-) => {
+const sendAccountValidationMail = async (email: string, name: string, token: string) => {
     // ) => {
     // return new Promise((resolve: (value: string) => void) => {
     // Mail infos
@@ -66,8 +61,7 @@ const sendAccountValidationMail = async (
         logger("mailing", "Email sent", { successMessage: "OK" });
         return "Email sent";
     } catch (err) {
-        logger("mailing", "Error", { errorMessage: String(err) });
-        await transporter.close();
+        logger("mailing", "Error", { errorMessage: (err as Error).message });
         return "Error on mail sending";
     }
 };

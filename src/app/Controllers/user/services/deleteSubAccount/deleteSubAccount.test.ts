@@ -11,7 +11,7 @@ describe("deleteSubAccount controller test", () => {
         {
             restaurantId: "restaurantId",
         },
-        String(process.env.TOKEN_KEY)
+        "secrettokenkey"
     );
 
     req.headers = {
@@ -47,7 +47,6 @@ describe("deleteSubAccount controller test", () => {
         try {
             await deleteSubAccount(req);
         } catch (err) {
-            console.log((err as Error).name);
             error = err as Error;
         }
 
@@ -72,6 +71,6 @@ describe("deleteSubAccount controller test", () => {
         }
 
         // Expect that no error has been thrown
-        expect(error).not.toBeDefined();
+        expect(error).toBeUndefined();
     });
 });

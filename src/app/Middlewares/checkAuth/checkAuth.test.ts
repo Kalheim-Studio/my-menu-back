@@ -1,13 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
-import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import checkAuth from "./checkAuth";
 
 import { Restaurant } from "../../Models/Restaurant";
 
 describe("checkAuth middleware test", () => {
-    dotenv.config();
-
     const req: Request = { headers: {} } as Request;
     const res = { status: jest.fn().mockReturnThis(), send: jest.fn() } as unknown as Response;
     const next = jest.fn() as NextFunction;
@@ -18,7 +15,7 @@ describe("checkAuth middleware test", () => {
     // Generating expired 2h hours token (backdating it by 2.5h)
         const token = jwt.sign(
             { restaurantId: "restaurantId", iat: Math.floor(Date.now() / 1000) - 60 * 60 * 2.5 },
-            String(process.env.TOKEN_KEY),
+            "secrettokenkey",
             {
                 expiresIn: "2h",
             }
@@ -61,8 +58,10 @@ describe("checkAuth middleware test", () => {
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
-    it("Should fail if unknwon account", async () => {
-        const authToken = jwt.sign({ restaurantId: "thisanunknownaccountid" }, String(process.env.TOKEN_KEY));
+    it("Should fail if no account has been found", async () => {
+        process.env.TOKEN_KEY = "secrettokenkey";
+        const authToken = jwt.sign({ restaurantId: "thisanunknownaccountid" }, "secrettokenkey");
+
         // Unknwon account
         req.headers.authorization = "Bearer " + authToken;
 
@@ -76,7 +75,9 @@ describe("checkAuth middleware test", () => {
     });
 
     it("Should fail if unvalidated account", async () => {
-        const authToken = jwt.sign({ restaurantId: "thisanunvalidatedaccountid" }, String(process.env.TOKEN_KEY));
+        process.env.TOKEN_KEY = "secrettokenkey";
+        const authToken = jwt.sign({ restaurantId: "thisanunvalidatedaccountid" }, "secrettokenkey");
+
         // Unknwon account
         req.headers.authorization = "Bearer " + authToken;
 
@@ -90,8 +91,10 @@ describe("checkAuth middleware test", () => {
     });
 
     it("Should grant access if valid unlimitted token", async () => {
-    // Generating unlimited valid token
-        const authToken = jwt.sign({ restaurantId: "restaurantId" }, String(process.env.TOKEN_KEY));
+        process.env.TOKEN_KEY = "secrettokenkey";
+
+        // Generating unlimited valid token
+        const authToken = jwt.sign({ restaurantId: "restaurantId" }, "secrettokenkey");
         req.headers.authorization = "Bearer " + authToken;
 
         // Mock la recherche de compte dans la base de données
@@ -103,8 +106,9 @@ describe("checkAuth middleware test", () => {
     });
 
     it("Should grant access if valid limited token", async () => {
-    // Generatin 2 hours token
-        const authToken = jwt.sign({ restaurantId: "restaurantId" }, String(process.env.TOKEN_KEY), {
+        process.env.TOKEN_KEY = "secrettokenkey";
+        // Generatin 2 hours token
+        const authToken = jwt.sign({ restaurantId: "restaurantId" }, "secrettokenkey", {
             expiresIn: "2h",
         });
         req.headers.authorization = "Bearer " + authToken;

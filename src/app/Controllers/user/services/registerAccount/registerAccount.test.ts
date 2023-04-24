@@ -140,7 +140,7 @@ describe("Testing registerAccount controller", () => {
         }
 
         // Expect error to has been not thrown
-        expect(error).not.toBeDefined();
+        expect(error).toBeUndefined();
 
         // Expect data registered
         expect(Restaurant.prototype.save).toHaveBeenCalled();
