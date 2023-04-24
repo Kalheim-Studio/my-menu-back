@@ -9,11 +9,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - run: echo "Code has been checkout."
-      - name: Use node v18.14.1
+      - name: Use node v18
         uses: actions/setup-node@v2
         with:
-          node-version: "18.14.1"
-      - run: echo "Use node version 18.12.1"
+          node-version: "18"
+      - run: echo "Use node version 18"
       - name: Running install
         run: |
           echo "Start dependencies installation"
