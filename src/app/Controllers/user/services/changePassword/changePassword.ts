@@ -1,5 +1,5 @@
 import type { Request } from "express";
-import { logger } from "../../../../Utils/logger/logger";
+import { logger } from "../../../../../Utils/logger/logger";
 
 const changePassword = (req: Request) => {
     // verif token

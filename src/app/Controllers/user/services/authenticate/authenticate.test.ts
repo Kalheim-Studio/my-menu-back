@@ -5,7 +5,7 @@ import { Restaurant } from "../../../../Models/Restaurant";
 import authenticate from "./authenticate";
 import AuthToken from "../../../../Types/AuthToken";
 
-describe("Testing authenticate controller", () => {
+describe("authenticate service test", () => {
     const req: Request = { body: {} } as Request;
     const salt_round = 1;
 

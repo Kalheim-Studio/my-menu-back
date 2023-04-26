@@ -2,7 +2,7 @@ import type { Request } from "express";
 import { Restaurant } from "../../../../Models/Restaurant";
 import validateAccount from "./validateAccount";
 
-describe("Testing validateAccount controller", () => {
+describe("validateAccount service test", () => {
     // Mocking request
     const req: Request = { params: {} } as Request;
     req.params = {

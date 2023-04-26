@@ -13,7 +13,7 @@ jest.mock("../../../../../Utils/mailing/mailing", () => ({
     sendAccountValidationMail: jest.fn().mockResolvedValue({}),
 }));
 
-describe("Testing registerAccount controller", () => {
+describe("registerAccount service test", () => {
     const req = { body: {} } as Request;
 
     it("Should fail if user missing", async () => {
