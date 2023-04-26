@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import createSubAccount from "./createSubAccount";
 import { User } from "../../../../Models/User";
 
-describe("createSubAccount controller test", () => {
+describe("createSubAccount service test", () => {
     // Mocking request
     const req = { body: {}, headers: {} } as Request;
 
@@ -64,7 +64,7 @@ describe("createSubAccount controller test", () => {
 
         // Expect error to has been thrown
         expect(error).toBeDefined();
-        expect((error as Error).name).toBe("duplicate_account");
+        expect((error as Error).name).toBe("duplicate-account");
     });
 
     it("Should response error if missing Data", async () => {

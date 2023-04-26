@@ -4,7 +4,7 @@ import { User } from "../../../../Models/User";
 import { Restaurant } from "../../../../Models/Restaurant";
 import getAccountInfo from "./getAccountInfo";
 
-describe("getAccountInfo controller test", () => {
+describe("getAccountInfo service test", () => {
     // Mocking request
     const req = { headers: {} } as Request;
     const authToken = jwt.sign(
@@ -65,7 +65,6 @@ describe("getAccountInfo controller test", () => {
         } catch (err) {
             error = err;
         }
-        console.log(typeof result, result);
 
         expect(error).toBeUndefined();
         expect(result).toEqual({

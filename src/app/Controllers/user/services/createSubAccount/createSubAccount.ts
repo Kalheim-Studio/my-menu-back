@@ -20,7 +20,7 @@ const createSubAccount = async (req: Request) => {
 
         if (results.length > 0) {
             const error = new Error("An account with this identifier already exist for this restaurant");
-            error.name = "duplicate_account";
+            error.name = "duplicate-account";
             throw error;
         }
 

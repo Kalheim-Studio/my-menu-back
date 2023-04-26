@@ -7,8 +7,8 @@ import createSubAccount from "./services/createSubAccount/createSubAccount";
 import getAllAccountsByRestaurantId from "./services/getAllAccountsByRestaurantId/getAllAccountsByRestaurantId";
 import deleteSubAccount from "./services/deleteSubAccount/deleteSubAccount";
 import getAccountInfo from "./services/getAccountInfo/getAccountInfo";
-import resetPassword from "./services/resetPassword";
-import changePassword from "./services/changePassword";
+import resetPassword from "./services/resetPassword/resetPassword";
+import changePassword from "./services/changePassword/changePassword";
 // Utils
 import { logger } from "../../../Utils/logger/logger";
 
@@ -53,7 +53,7 @@ const User = {
         } catch (err) {
             logger(__dirname, "Error", { errorMessage: (err as Error).message });
 
-            if ((err as Error).name === "duplicate_account") res.status(409).send("Error while registering.");
+            if ((err as Error).name === "duplicate-account") res.status(409).send("Error while registering.");
             else res.status(500).send("Error while registering.");
         }
     },
@@ -65,7 +65,7 @@ const User = {
                 subAccounts: results,
             });
         } catch (err) {
-            res.status(500).send("Request Error");
+            res.status(500).send("Request error");
         }
     },
     // Sub account deleting
@@ -91,6 +91,7 @@ const User = {
     resetPassword: async (req: Request, res: Response) => {
         try {
             await resetPassword(req);
+            res.status(200).send("Reset password mail has been sent");
         } catch (err) {
             res.status(404).send((err as Error).message);
         }
@@ -99,6 +100,7 @@ const User = {
     changePassword: async (req: Request, res: Response) => {
         try {
             await changePassword(req);
+            res.status(200).send("Password changed");
         } catch (err) {
             res.status(404).send((err as Error).message);
         }

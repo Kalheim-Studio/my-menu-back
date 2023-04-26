@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import deleteSubAccount from "./deleteSubAccount";
 import { User } from "../../../../Models/User";
 
-describe("deleteSubAccount controller test", () => {
+describe("deleteSubAccount service test", () => {
     // Mocking request
     const req = { body: {}, headers: {} } as Request;
 

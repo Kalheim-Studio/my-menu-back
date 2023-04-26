@@ -1,7 +1,7 @@
 import express from "express";
-import user from "../Controllers/user/user";
-import checkData from "../Middlewares/checkData/checkData";
-import checkAuth from "../Middlewares/checkAuth/checkAuth";
+import user from "../../Controllers/user/user";
+import checkData from "../../Middlewares/checkData/checkData";
+import checkAuth from "../../Middlewares/checkAuth/checkAuth";
 
 const userRouter = express.Router();
 

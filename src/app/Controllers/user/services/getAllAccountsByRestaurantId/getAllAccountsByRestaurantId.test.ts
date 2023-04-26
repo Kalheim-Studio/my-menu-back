@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { User } from "../../../../Models/User";
 import getAllAccountsByRestaurantId from "./getAllAccountsByRestaurantId";
 
-describe("getAllAccountsByRestaurantId controller test", () => {
+describe("getAllAccountsByRestaurantId service test", () => {
     const req = { headers: {} } as Request;
 
     it("Should get all account by res Id", async () => {
