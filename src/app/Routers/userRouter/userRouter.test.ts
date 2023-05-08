@@ -24,6 +24,7 @@ jest.mock("../../Controllers/user/user", () => {
         registerAccount: jest.fn().mockImplementation(mockedControllerFunction),
         validateAccount: jest.fn().mockImplementation(mockedControllerFunction),
         authenticate: jest.fn().mockImplementation(mockedControllerFunction),
+        checkAuthenticated: jest.fn().mockImplementation(mockedControllerFunction),
         createSubAccount: jest.fn().mockImplementation(mockedControllerFunction),
         getAllAccountsByRestaurantId: jest.fn().mockImplementation(mockedControllerFunction),
         deleteSubAccount: jest.fn().mockImplementation(mockedControllerFunction),
@@ -52,6 +53,13 @@ describe("UserRouter test", () => {
 
     it("Should response on route post user/authenticate", async () => {
         const response = await request(app).post("/user/authenticate");
+
+        expect(response.statusCode).toBe(statusCode);
+        expect(response.text).toEqual(message);
+    });
+
+    it("Should response on route get user/check-authenticated", async () => {
+        const response = await request(app).get("/user/check-authenticated");
 
         expect(response.statusCode).toBe(statusCode);
         expect(response.text).toEqual(message);
