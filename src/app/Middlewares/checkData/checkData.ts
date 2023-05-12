@@ -16,7 +16,7 @@ function checkData(req: Request, res: Response, next: NextFunction) {
         logger(__dirname, "Data checked", { successMessage: "OK" });
         next();
     }
-    // If not send error
+    // If not, send error
     else {
         logger(__dirname, "Error", { errorMessage: "Data are not valid" });
         res.status(422).send("Error: Data are not valid.");
