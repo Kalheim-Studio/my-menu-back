@@ -45,6 +45,12 @@ const User = {
             res.status(401).send((err as Error).message);
         }
     },
+    // Check if valid authentication token
+    checkAuthenticated: async (req: Request, res: Response) => {
+        res.status(200).json({
+            authenticated: true,
+        });
+    },
     // Sub account creation
     createSubAccount: async (req: Request, res: Response) => {
         try {

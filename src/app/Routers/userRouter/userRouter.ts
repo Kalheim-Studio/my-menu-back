@@ -8,6 +8,7 @@ const userRouter = express.Router();
 userRouter.post("/register", checkData, user.registerAccount);
 userRouter.put("/validate-account/:token", user.validateAccount);
 userRouter.post("/authenticate", checkData, user.authenticate);
+userRouter.get("/check-authenticated", checkAuth, user.checkAuthenticated);
 userRouter.post("/create-sub-account", checkAuth, checkData, user.createSubAccount);
 userRouter.get("/accounts-by-rest-id", checkAuth, user.getAllAccountsByRestaurantId);
 userRouter.delete("/delete-sub-account", checkAuth, user.deleteSubAccount);

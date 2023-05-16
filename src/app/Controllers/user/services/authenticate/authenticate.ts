@@ -3,6 +3,7 @@ import { logger } from "../../../../../Utils/logger/logger";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Restaurant } from "../../../../Models/Restaurant";
+import { User } from "../../../../Models/User";
 
 const authentication = async (req: Request) => {
     logger(__dirname, "Authentication attempt");
@@ -10,8 +11,28 @@ const authentication = async (req: Request) => {
     // Searching for account to connect
     const result = await Restaurant.findOne({ email: req.body.email });
 
+    // If wronf email
+    if (!result) throw new Error("Login or password incorrect, or unhautorized account");
+
+    // If manager, search user subAccount
+    let manager: {
+    restaurantId: string;
+    password: string;
+  } | null = null;
+
+    if (req.body.identifier) {
+        manager = await User.findOne({
+            identifier: req.body.identifier,
+            role: "Manager",
+            restaurantId: result._id,
+        });
+        if (!manager) throw new Error("No manager account found");
+    }
+    // Getting which password to check
+    const password = manager?.password ?? result.password;
+
     // Check if account found and paswword OK
-    if (result && bcrypt.compareSync(req.body.password, result.password)) {
+    if (password && bcrypt.compareSync(req.body.password, password)) {
     // Check if account has been valdiated
         if (result.validated === "true") {
             const token = req.body.stayLogged
@@ -37,7 +58,7 @@ const authentication = async (req: Request) => {
         }
     } else {
     // Response email or password incorrect
-        throw new Error("Login or password incorrect");
+        throw new Error("Login or password incorrect, or unhautorized account");
     }
 };
 

@@ -136,6 +136,14 @@ describe("user controller test", () => {
         expect(res.json).toHaveBeenCalledWith({ token: "authToken" });
     });
 
+    // checkAuthenticated
+    it("Should response authenticate: true ", async () => {
+        await User.checkAuthenticated(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ authenticated: true });
+    });
+
     // createSubAccount
     it("Should send duplicate-account error on createSubAccount", async () => {
         req.body.errorName = "duplicate-account";
