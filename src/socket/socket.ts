@@ -1,6 +1,6 @@
 import type { Server } from "socket.io";
 import authenticate from "./Middlewares/authentication";
-import { logger } from "../Utils/logger/logger";
+import { logger } from "../Utils";
 
 const socket = (io: Server) => {
     authenticate(io);

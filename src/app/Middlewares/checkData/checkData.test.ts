@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import checkData from "./checkData";
+import { checkData } from "./checkData";
 
 describe("checkData middleware test", () => {
     const req: Request = { body: {} } as Request;

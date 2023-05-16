@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import validator from "validator";
-import { logger } from "../../../Utils/logger/logger";
+import { logger } from "../../../Utils";
 
 type AllowedDataType = string | number | boolean | object;
 
@@ -100,4 +100,4 @@ function validData(data: string, value: AllowedDataType, req: Request, parentObj
     return isValidData;
 }
 
-export default checkData;
+export { checkData };
