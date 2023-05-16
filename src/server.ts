@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import { Server } from "socket.io";
 import socket from "./socket/socket";
 import mongoose from "mongoose";
-import { logger } from "./Utils/logger/logger";
+import { logger } from "./Utils";
 
 // Initializing environnment
 dotenv.config();

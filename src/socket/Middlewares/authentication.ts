@@ -1,5 +1,5 @@
 import type { Server } from "socket.io";
-import { logger } from "../../Utils/logger/logger";
+import { logger } from "../../Utils";
 
 const authenticate = (io: Server) => {
     logger(__dirname, "Socket authentication");

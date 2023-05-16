@@ -1,16 +1,16 @@
 import request from "supertest";
 import { Request, Response, NextFunction } from "express";
 import app from "../../app";
+import { userController } from "../../Controllers";
+// Mocking checkData middleware
+jest.mock("../../Middlewares/checkAuth/checkAuth", () => ({
+    checkAuth: jest.fn().mockImplementation((req: Request, res: Response, next: NextFunction) => next()),
+}));
 
 // Mocking checkData middleware
-jest.mock("../../Middlewares/checkAuth/checkAuth", () => {
-    return jest.fn().mockImplementation((req: Request, res: Response, next: NextFunction) => next());
-});
-
-// Mocking checkData middleware
-jest.mock("../../Middlewares/checkData/checkData", () => {
-    return jest.fn().mockImplementation((req: Request, res: Response, next: NextFunction) => next());
-});
+jest.mock("../../Middlewares/checkData/checkData", () => ({
+    checkData: jest.fn().mockImplementation((req: Request, res: Response, next: NextFunction) => next()),
+}));
 
 // Mocking User controller
 const statusCode = 200;
@@ -19,8 +19,8 @@ function mockedControllerFunction(req: Request, res: Response) {
     res.status(statusCode).send(message);
 }
 
-jest.mock("../../Controllers/user/user", () => {
-    return {
+jest.mock("../../Controllers/userController/userController", () => ({
+    userController: {
         registerAccount: jest.fn().mockImplementation(mockedControllerFunction),
         validateAccount: jest.fn().mockImplementation(mockedControllerFunction),
         authenticate: jest.fn().mockImplementation(mockedControllerFunction),
@@ -31,8 +31,8 @@ jest.mock("../../Controllers/user/user", () => {
         getAccountInfo: jest.fn().mockImplementation(mockedControllerFunction),
         resetPassword: jest.fn().mockImplementation(mockedControllerFunction),
         changePassword: jest.fn().mockImplementation(mockedControllerFunction),
-    };
-});
+    },
+}));
 
 /* #### TEST #### */
 

@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import AuthToken from "../../Types/AuthToken";
 import { Restaurant } from "../../Models/Restaurant";
-import { logger } from "../../../Utils/logger/logger";
+import { logger } from "../../../Utils";
 
 const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
     let validAuth = false;
@@ -37,4 +37,4 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
     else res.status(401).send("Authentication failed");
 };
 
-export default checkAuth;
+export { checkAuth };

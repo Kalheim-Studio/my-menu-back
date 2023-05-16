@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { logger } from "../logger/logger";
+import { logger } from "../";
 
 const NAME = "[NO_REPLY]MyMenu";
 
@@ -26,8 +26,6 @@ margin:0 10em;`;
 
 // Validation mail
 const sendAccountValidationMail = async (email: string, name: string, token: string) => {
-    // ) => {
-    // return new Promise((resolve: (value: string) => void) => {
     // Mail infos
     const mailOptions = {
         from: {

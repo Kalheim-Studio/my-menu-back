@@ -2,12 +2,9 @@ import express from "express";
 import logger from "morgan";
 import cors from "cors";
 
-import userRouter from "./Routers/userRouter/userRouter";
-import cardRouter from "./Routers/cardRouter";
-import waiterRouter from "./Routers/waiterRouter";
-import orderRouter from "./Routers/orderRouter";
+import { userRouter, menuRouter, waiterRouter, orderRouter } from "./Routers";
 
-// Créate application
+// Create application
 const app = express();
 // Utilisation cors
 app.use(cors());
@@ -21,8 +18,8 @@ app.use(logger("dev"));
  */
 // User
 app.use("/user", userRouter);
-// Card
-app.use("/card", cardRouter);
+// Menu
+app.use("/card", menuRouter);
 // Waiter
 app.use("/waiter", waiterRouter);
 // Order
