@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} has has pushed on branch main ${{ github.ref }}.
 on: 
   push:
     branches:
-      - main
+      - prod
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
