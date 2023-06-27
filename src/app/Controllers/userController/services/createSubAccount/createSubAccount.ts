@@ -2,7 +2,7 @@ import type { Request } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { logger } from "../../../../../Utils";
-import AuthToken from "../../../../Types/AuthToken";
+import { AuthToken } from "../../../../Types";
 import { User } from "../../../../Models/User";
 
 const createSubAccount = async (req: Request) => {

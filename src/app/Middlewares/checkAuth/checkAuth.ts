@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import AuthToken from "../../Types/AuthToken";
+import { AuthToken } from "../../Types";
 import { Restaurant } from "../../Models/Restaurant";
 import { logger } from "../../../Utils";
 

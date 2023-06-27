@@ -2,8 +2,7 @@ import type { Request } from "express";
 import jwt from "jsonwebtoken";
 import { User } from "../../../../Models/User";
 import { logger } from "../../../../../Utils";
-import AuthToken from "../../../../Types/AuthToken";
-
+import { AuthToken } from "../../../../Types/";
 const getAllAccountsByRestaurantId = async (req: Request) => {
     logger(__dirname, "Get all account by restaurant Id");
     // Getting restaurantId from token

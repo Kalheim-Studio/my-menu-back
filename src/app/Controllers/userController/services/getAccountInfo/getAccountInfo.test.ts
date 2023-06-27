@@ -49,12 +49,13 @@ describe("getAccountInfo service test", () => {
 
         Restaurant.findOne = jest.fn().mockResolvedValue({
             name: "name",
+            siret: "thisASiret",
             address: "address",
             postalCode: "postalCode",
             city: "city",
             phone: "phone",
             email: "email",
-            table: "table",
+            table: ["table"],
         });
 
         let result;
@@ -66,6 +67,8 @@ describe("getAccountInfo service test", () => {
             error = err;
         }
 
+        console.log(result);
+
         expect(error).toBeUndefined();
         expect(result).toEqual({
             owner: {
@@ -75,12 +78,13 @@ describe("getAccountInfo service test", () => {
             },
             restaurant: {
                 name: "name",
+                siret: "thisASiret",
                 address: "address",
                 postalCode: "postalCode",
                 city: "city",
                 phone: "phone",
                 email: "email",
-                table: "table",
+                table: ["table"],
             },
         });
     });

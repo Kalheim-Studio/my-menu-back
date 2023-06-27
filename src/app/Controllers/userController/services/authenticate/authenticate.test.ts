@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import { Restaurant } from "../../../../Models/Restaurant";
 import { User } from "../../../../Models/User";
 import { authenticate } from "./authenticate";
-import AuthToken from "../../../../Types/AuthToken";
+import { AuthToken } from "../../../../Types";
 
 describe("authenticate service test", () => {
     const req: Request = { body: {} } as Request;

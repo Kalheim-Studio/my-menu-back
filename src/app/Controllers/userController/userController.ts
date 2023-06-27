@@ -44,11 +44,11 @@ const userController = {
             });
         } catch (err) {
             logger(__dirname, "Error", { errorMessage: (err as Error).message });
-            res.status(401).send((err as Error).message);
+            res.status(401).send("Authentication failed");
         }
     },
     // Check if valid authentication token
-    checkAuthenticated: async (req: Request, res: Response) => {
+    checkAuthenticated: (req: Request, res: Response) => {
         res.status(200).json({
             authenticated: true,
         });
@@ -92,7 +92,7 @@ const userController = {
             const result = await getAccountInfo(req);
             res.status(200).json(result);
         } catch (err) {
-            res.status(404).send((err as Error).message);
+            res.status(500).send("An error occured.");
         }
     },
     // Reset password
@@ -101,7 +101,7 @@ const userController = {
             await resetPassword(req);
             res.status(200).send("Reset password mail has been sent");
         } catch (err) {
-            res.status(404).send((err as Error).message);
+            res.status(404).send("An error occured");
         }
     },
     // Change password
@@ -110,7 +110,7 @@ const userController = {
             await changePassword(req);
             res.status(200).send("Password changed");
         } catch (err) {
-            res.status(404).send((err as Error).message);
+            res.status(404).send("Password has not been changed");
         }
     },
 };

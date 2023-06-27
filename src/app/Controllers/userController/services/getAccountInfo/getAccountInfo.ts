@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { User } from "../../../../Models/User";
 import { Restaurant } from "../../../../Models/Restaurant";
 import { logger } from "../../../../../Utils";
-import AuthToken from "../../../../Types/AuthToken";
+import { AuthToken } from "../../../../Types/";
 
 const getAccountInfo = async (req: Request) => {
     logger(__dirname, "Get account info");
@@ -25,12 +25,13 @@ const getAccountInfo = async (req: Request) => {
         },
         restaurant: {
             name: restaurant.name,
+            siret: restaurant.siret,
             address: restaurant.address,
             postalCode: restaurant.postalCode,
             city: restaurant.city,
             phone: restaurant.phone,
             email: restaurant.email,
-            table: restaurant.table,
+            table: restaurant.table
         },
     };
 };

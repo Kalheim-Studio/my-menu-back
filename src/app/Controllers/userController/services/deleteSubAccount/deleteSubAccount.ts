@@ -1,7 +1,7 @@
 import type { Request } from "express";
 import jwt from "jsonwebtoken";
 import { User } from "../../../../Models/User";
-import AuthToken from "../../../../Types/AuthToken";
+import { AuthToken } from "../../../../Types/";
 import { logger } from "../../../../../Utils";
 
 const deleteSubAccount = async (req: Request) => {

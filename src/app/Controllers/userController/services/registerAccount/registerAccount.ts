@@ -18,6 +18,7 @@ const registerAccount = async (req: Request) => {
     // Restaurant creation
     const newRestaurant = new Restaurant({
         name: req.body.restaurant?.name,
+        siret: req.body.restaurant?.siret,
         address: req.body.restaurant?.address,
         postalCode: req.body.restaurant?.postalCode,
         city: req.body.restaurant?.city,
@@ -53,7 +54,7 @@ const registerAccount = async (req: Request) => {
         // Saving data
         await newRestaurant.save();
         await newUser.save();
-
+        
         logger(__dirname, "Account saved", { successMessage: "OK" });
 
         // Sending validation mail
