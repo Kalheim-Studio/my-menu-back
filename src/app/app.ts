@@ -22,7 +22,7 @@ app.use(logger("dev"));
 // User
 app.use("/user", userRouter);
 // Menu
-app.use("/card", menuRouter);
+app.use("/menu", menuRouter);
 // Waiter
 app.use("/waiter", waiterRouter);
 // Order

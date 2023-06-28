@@ -1,7 +1,7 @@
 import request from "supertest";
 import { Request, Response, NextFunction } from "express";
 import app from "../../app";
-import { userController } from "../../Controllers";
+
 // Mocking checkData middleware
 jest.mock("../../Middlewares/checkAuth/checkAuth", () => ({
     checkAuth: jest.fn().mockImplementation((req: Request, res: Response, next: NextFunction) => next()),

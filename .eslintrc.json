@@ -12,7 +12,7 @@
     "ecmaVersion": 2022,
     "sourceType": "module"
   },
-  "ignorePatterns": ["**/*.json", "**/*.md", "**/coverage/*"],
+  "ignorePatterns": ["**/*.json", "**/*.md", "**/dist/*", "**/coverage/*"],
   "rules": {
     "indent": "error",
     "semi": ["error", "always"],
