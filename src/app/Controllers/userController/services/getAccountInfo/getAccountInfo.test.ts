@@ -1,6 +1,5 @@
 import type { Request } from "express";
 import jwt from "jsonwebtoken";
-import { User } from "../../../../Models/User";
 import { Restaurant } from "../../../../Models/Restaurant";
 import { getAccountInfo } from "./getAccountInfo";
 
@@ -21,10 +20,8 @@ describe("getAccountInfo service test", () => {
     /* #### TESTS #### */
     it("Should fail if there's no account", async () => {
     // Mocking database read functions
-        User.findOne = jest.fn().mockResolvedValue(null);
-
-        Restaurant.findOne = jest.fn().mockResolvedValue(null);
-
+        Restaurant.aggregate = jest.fn().mockResolvedValue([]);
+        
         let result;
         let error;
 
@@ -41,13 +38,7 @@ describe("getAccountInfo service test", () => {
 
     it("Should get account info", async () => {
     // Mocking database read functions
-        User.findOne = jest.fn().mockResolvedValue({
-            identifier: "identifier",
-            firstname: "firstname",
-            lastname: "lastname",
-        });
-
-        Restaurant.findOne = jest.fn().mockResolvedValue({
+        Restaurant.aggregate = jest.fn().mockResolvedValue([{
             name: "name",
             siret: "thisASiret",
             address: "address",
@@ -56,7 +47,13 @@ describe("getAccountInfo service test", () => {
             phone: "phone",
             email: "email",
             table: ["table"],
-        });
+            results: [{
+                identifier: "identifier",
+                firstname: "firstname",
+                lastname: "lastname",
+                role: "Owner"
+            }]
+        }]);
 
         let result;
         let error;

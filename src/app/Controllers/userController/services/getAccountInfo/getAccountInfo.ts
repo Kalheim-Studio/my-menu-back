@@ -33,7 +33,10 @@ const getAccountInfo = async (req: Request) => {
                 as: "results"
             }
         },
-    ]).match({"results.role": "Owner"});
+    ]);
+    
+    if(query.length === 0)
+        throw new Error("No account has been found");
 
     const owner = (query[0].results as Owner[]).filter((user) => user.role === "Owner")[0];
 
