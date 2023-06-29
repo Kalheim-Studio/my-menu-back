@@ -72,7 +72,7 @@ describe("registerAccount service test", () => {
 
     it("Should failed if account already exist", async () => {
     // Mocking saving models function
-        Restaurant.prototype.save = jest.fn(() => {
+        Restaurant.prototype.save = jest.fn().mockImplementationOnce(() => {
             const error = new Error() as DuplicateKeyError;
             error.code = 11000;
             throw error;
@@ -85,6 +85,7 @@ describe("registerAccount service test", () => {
             lastname: "Doe",
             restaurant: {
                 name: "John's Dinner",
+                siret: "ThisIsASiret",
                 address: "123 Sesame street",
                 postalCode: "01234",
                 city: "laputa",
@@ -99,13 +100,12 @@ describe("registerAccount service test", () => {
         try {
             await registerAccount(req);
         } catch (err) {
-            error = err;
+            error = err as DuplicateKeyError;
         }
 
         // Expect error to has been thrown
         expect(error).toBeDefined();
         expect((error as DuplicateKeyError).code).toBe(11000);
-
         // Check mail not sended
         expect(sendAccountValidationMail).not.toHaveBeenCalled();
     });
@@ -122,6 +122,7 @@ describe("registerAccount service test", () => {
             lastname: "Doe",
             restaurant: {
                 name: "John's Dinner",
+                siret: "thisASiret",
                 address: "123 Sesame street",
                 postalCode: "01234",
                 city: "laputa",

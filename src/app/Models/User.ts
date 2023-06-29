@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema(
         lastname: { type: String, required: true },
         password: { type: String, required: true },
         role: { type: String, enum: ["Owner", "Manager", "Waiter"], required: true },
-        restaurantId: { type: String, required: true },
+        restaurantId: { type: mongoose.Schema.Types.ObjectId, required: true },
     },
     { collection: "User" }
 );

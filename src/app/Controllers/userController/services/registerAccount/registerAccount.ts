@@ -1,9 +1,10 @@
 import type { Request } from "express";
-import { User } from "../../../../Models/User";
-import { Restaurant } from "../../../../Models/Restaurant";
+import { Types } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { v4 as uuidV4 } from "uuid";
+import { User } from "../../../../Models/User";
+import { Restaurant } from "../../../../Models/Restaurant";
 import { logger, sendAccountValidationMail } from "../../../../../Utils";
 
 const registerAccount = async (req: Request) => {
@@ -18,6 +19,7 @@ const registerAccount = async (req: Request) => {
     // Restaurant creation
     const newRestaurant = new Restaurant({
         name: req.body.restaurant?.name,
+        siret: req.body.restaurant?.siret,
         address: req.body.restaurant?.address,
         postalCode: req.body.restaurant?.postalCode,
         city: req.body.restaurant?.city,
@@ -33,7 +35,7 @@ const registerAccount = async (req: Request) => {
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         password: hashedPwd,
-        restaurantId: newRestaurant.id,
+        restaurantId: new Types.ObjectId(newRestaurant.id),
         role: "Owner",
     });
 
@@ -53,7 +55,7 @@ const registerAccount = async (req: Request) => {
         // Saving data
         await newRestaurant.save();
         await newUser.save();
-
+        
         logger(__dirname, "Account saved", { successMessage: "OK" });
 
         // Sending validation mail

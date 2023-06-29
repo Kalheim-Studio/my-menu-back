@@ -94,181 +94,203 @@ describe("user controller test", () => {
     /* #### TESTS #### */
 
     // registerAccount
-    it("Should send error on registerAccount", async () => {
-        req.body.errorName = "some-error";
+    describe("Register account test", () => {
+        it("Should send Ok response on registerAccount", async () => {
+            
+            await userController.registerAccount(req, res);
 
-        await userController.registerAccount(req, res);
+            expect(res.status).toHaveBeenCalledWith(201);
+            expect(res.send).toHaveBeenCalledWith("Account created");
+        });
 
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.send).toHaveBeenCalledWith("Error while registering");
-    });
+        it("Should send error on registerAccount", async () => {
+            req.body.errorName = "some-error";
 
-    it("Should send Ok response on registerAccount", async () => {
-        await userController.registerAccount(req, res);
+            await userController.registerAccount(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(201);
-        expect(res.send).toHaveBeenCalledWith("Account created");
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.send).toHaveBeenCalledWith("Error while registering");
+        });
     });
 
     // validateAccount
-    it("Should send error on validateAccount", async () => {
-        req.body.errorName = "some-error";
+    describe("validateAccount test", () => {
+        it("Should send error on validateAccount", async () => {
+            req.body.errorName = "some-error";
 
-        await userController.validateAccount(req, res);
+            await userController.validateAccount(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(409);
-        expect(res.send).toHaveBeenCalledWith("No account to validate has been found");
-    });
+            expect(res.status).toHaveBeenCalledWith(409);
+            expect(res.send).toHaveBeenCalledWith("No account to validate has been found");
+        });
 
-    it("Should send Ok response on validateAccount", async () => {
-        await userController.validateAccount(req, res);
+        it("Should send Ok response on validateAccount", async () => {
+            await userController.validateAccount(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(201);
-        expect(res.send).toHaveBeenCalledWith("Account has been validated");
+            expect(res.status).toHaveBeenCalledWith(201);
+            expect(res.send).toHaveBeenCalledWith("Account has been validated");
+        });
     });
 
     // authenticate
-    it("Should send error on authenticate", async () => {
-        req.body.errorName = "some-error";
+    describe("authenticate test", () => {
+        it("Should send error on authenticate", async () => {
+            req.body.errorName = "some-error";
 
-        await userController.authenticate(req, res);
+            await userController.authenticate(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(401);
-        expect(res.send).toHaveBeenCalledWith("This is an error");
-    });
+            expect(res.status).toHaveBeenCalledWith(401);
+            expect(res.send).toHaveBeenCalledWith("Authentication failed");
+        });
 
-    it("Should send Ok response on authenticate", async () => {
-        await userController.authenticate(req, res);
+        it("Should send Ok response on authenticate", async () => {
+            await userController.authenticate(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({ token: "authToken" });
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith({ token: "authToken" });
+        });
     });
 
     // checkAuthenticated
-    it("Should response authenticate: true ", async () => {
-        await userController.checkAuthenticated(req, res);
+    describe("checkAythenticated test", () => {
+        it("Should response authenticate: true ", async () => {
+            await userController.checkAuthenticated(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({ authenticated: true });
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith({ authenticated: true });
+        });
     });
 
     // createSubAccount
-    it("Should send duplicate-account error on createSubAccount", async () => {
-        req.body.errorName = "duplicate-account";
+    describe("createSubAccount test", () => {
+        it("Should send duplicate-account error on createSubAccount", async () => {
+            req.body.errorName = "duplicate-account";
 
-        await userController.createSubAccount(req, res);
+            await userController.createSubAccount(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(409);
-        expect(res.send).toHaveBeenCalledWith("Error while registering.");
-    });
+            expect(res.status).toHaveBeenCalledWith(409);
+            expect(res.send).toHaveBeenCalledWith("Error while registering.");
+        });
 
-    it("Should send error on createSubAccount", async () => {
-        req.body.errorName = "some-error";
+        it("Should send error on createSubAccount", async () => {
+            req.body.errorName = "some-error";
 
-        await userController.createSubAccount(req, res);
+            await userController.createSubAccount(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.send).toHaveBeenCalledWith("Error while registering.");
-    });
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.send).toHaveBeenCalledWith("Error while registering.");
+        });
 
-    it("Should send Ok response on createSubAccount", async () => {
-        await userController.createSubAccount(req, res);
+        it("Should send Ok response on createSubAccount", async () => {
+            await userController.createSubAccount(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.send).toHaveBeenCalledWith("Account Created");
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.send).toHaveBeenCalledWith("Account Created");
+        });
     });
 
     // getAllAccountsByRestaurantId
-    it("Should send error on getAllAccountsByRestaurantId", async () => {
-        req.body.errorName = "some-error";
+    describe("getAllAccountByRestaurantId test", () => {
+        it("Should send error on getAllAccountsByRestaurantId", async () => {
+            req.body.errorName = "some-error";
 
-        await userController.getAllAccountsByRestaurantId(req, res);
+            await userController.getAllAccountsByRestaurantId(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.send).toHaveBeenCalledWith("Request error");
-    });
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.send).toHaveBeenCalledWith("Request error");
+        });
 
-    it("Should send Ok response on getAllAccountsByRestaurantId", async () => {
-        await userController.getAllAccountsByRestaurantId(req, res);
+        it("Should send Ok response on getAllAccountsByRestaurantId", async () => {
+            await userController.getAllAccountsByRestaurantId(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({ subAccounts: ["some results"] });
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith({ subAccounts: ["some results"] });
+        });
     });
 
     // deleteSubAccount
-    it("Should send no-account error on deleteSubAccount", async () => {
-        req.body.errorName = "no-account";
+    describe("deleteSubAccount test", () => {
+        it("Should send no-account error on deleteSubAccount", async () => {
+            req.body.errorName = "no-account";
 
-        await userController.deleteSubAccount(req, res);
+            await userController.deleteSubAccount(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(404);
-        expect(res.send).toHaveBeenCalledWith("This is an error");
-    });
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.send).toHaveBeenCalledWith("This is an error");
+        });
 
-    it("Should send error on deleteSubAccount", async () => {
-        req.body.errorName = "some-error";
+        it("Should send error on deleteSubAccount", async () => {
+            req.body.errorName = "some-error";
 
-        await userController.deleteSubAccount(req, res);
+            await userController.deleteSubAccount(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.send).toHaveBeenCalledWith("Error while deleting account");
-    });
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.send).toHaveBeenCalledWith("Error while deleting account");
+        });
 
-    it("Should send Ok response on deleteSubAccount", async () => {
-        await userController.deleteSubAccount(req, res);
+        it("Should send Ok response on deleteSubAccount", async () => {
+            await userController.deleteSubAccount(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.send).toHaveBeenCalledWith("Account deleted");
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.send).toHaveBeenCalledWith("Account deleted");
+        });
     });
 
     // getAccountInfo
-    it("Should send error on getAccountInfo", async () => {
-        req.body.errorName = "some-error";
+    describe("getAccountInfo", () => {
+        it("Should send error on getAccountInfo", async () => {
+            req.body.errorName = "some-error";
 
-        await userController.getAccountInfo(req, res);
+            await userController.getAccountInfo(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(404);
-        expect(res.send).toHaveBeenCalledWith("This is an error");
-    });
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.send).toHaveBeenCalledWith("This is an error");
+        });
 
-    it("Should send Ok response on getAccountInfo", async () => {
-        await userController.getAccountInfo(req, res);
+        it("Should send Ok response on getAccountInfo", async () => {
+            await userController.getAccountInfo(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({ accountInfos: "some infos" });
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith({ accountInfos: "some infos" });
+        });
     });
 
     // resetPassword
-    it("Should send error on resetPassword", async () => {
-        req.body.errorName = "some-error";
+    describe("restPassword test", () => {
+        it("Should send error on resetPassword", async () => {
+            req.body.errorName = "some-error";
 
-        await userController.resetPassword(req, res);
+            await userController.resetPassword(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(404);
-        expect(res.send).toHaveBeenCalledWith("This is an error");
-    });
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.send).toHaveBeenCalledWith("This is an error");
+        });
 
-    it("Should send Ok response on resetPassword", async () => {
-        await userController.resetPassword(req, res);
+        it("Should send Ok response on resetPassword", async () => {
+            await userController.resetPassword(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.send).toHaveBeenCalledWith("Reset password mail has been sent");
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.send).toHaveBeenCalledWith("Reset password mail has been sent");
+        });
     });
 
     // changePassword
-    it("Should send error on changePassword", async () => {
-        req.body.errorName = "some-error";
+    describe("changePassword test", () => {
+        it("Should send error on changePassword", async () => {
+            req.body.errorName = "some-error";
 
-        await userController.changePassword(req, res);
+            await userController.changePassword(req, res);
 
-        expect(res.status).toHaveBeenCalledWith(404);
-        expect(res.send).toHaveBeenCalledWith("This is an error");
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.send).toHaveBeenCalledWith("This is an error");
+        });
+
+        it("Should send Ok response on changePassword", async () => {
+            await userController.changePassword(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(201);
+            expect(res.send).toHaveBeenCalledWith("Password changed");
+        });
     });
 
-    it("Should send Ok response on changePassword", async () => {
-        await userController.changePassword(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(201);
-        expect(res.send).toHaveBeenCalledWith("Password changed");
-    });
 });

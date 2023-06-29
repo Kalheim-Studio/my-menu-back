@@ -71,6 +71,7 @@ function validData(data: string, value: AllowedDataType, req: Request, parentObj
         if (!validator.isNumeric(String(value)) || String(value).length !== 5) isValidData = false;
         break;
     // Data fields that have to be a non void string
+    case "siret":
     case "identifier":
     case "firstname":
     case "lastname":

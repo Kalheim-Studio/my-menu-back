@@ -6,10 +6,13 @@ import { userRouter, menuRouter, waiterRouter, orderRouter } from "./Routers";
 
 // Create application
 const app = express();
-// Utilisation cors
+
+// cors
 app.use(cors());
+    
 // Json Acceptation
 app.use(express.json());
+
 // Logger
 app.use(logger("dev"));
 
@@ -19,7 +22,7 @@ app.use(logger("dev"));
 // User
 app.use("/user", userRouter);
 // Menu
-app.use("/card", menuRouter);
+app.use("/menu", menuRouter);
 // Waiter
 app.use("/waiter", waiterRouter);
 // Order

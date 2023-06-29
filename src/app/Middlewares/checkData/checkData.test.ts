@@ -79,6 +79,18 @@ describe("checkData middleware test", () => {
         expect(res.send).toHaveBeenCalledWith(errorMessage);
     });
 
+    // Wrong siret
+    it("Should send error if bad siret", () => {
+        req.body = {
+            siret: 1,
+        };
+
+        checkData(req, res, next);
+
+        expect(res.status).toHaveBeenCalledWith(errorCode);
+        expect(res.send).toHaveBeenCalledWith(errorMessage);
+    });
+
     // Wrong identifier
     it("Should send error if bad identifier", () => {
         req.body = {
