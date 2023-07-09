@@ -5,6 +5,7 @@ import { waiterRouter } from "./waiterRouter/waiterRouter";
 import { orderRouter} from "./orderRouter/orderRouter";
 
 const router = express.Router();
+
 /**
  * Routes
  */
