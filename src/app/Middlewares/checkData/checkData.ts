@@ -84,7 +84,11 @@ function validData(data: string, value: AllowedDataType, req: Request, parentObj
         break;
     // Must be boolean
     case "stayLogged":
-        if (typeof value !== "boolean") isValidData = false;
+        if (value === "true") 
+            req.body.stayLogged = true;
+        else
+            isValidData = false;
+
         break;
     // All other fields are not allowed
     default:

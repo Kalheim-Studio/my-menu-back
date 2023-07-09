@@ -24,7 +24,7 @@ describe("checkData middleware test", () => {
                 email: "contact@johnsdinner.com",
                 password: "Abcdefgh1234!",
             },
-            stayLogged: true,
+            stayLogged: "true",
         };
 
         checkData(req, res, next);
