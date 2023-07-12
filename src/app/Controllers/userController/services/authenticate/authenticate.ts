@@ -18,6 +18,7 @@ const authenticate = async (req: Request) => {
     let manager;
 
     if (req.body.identifier) {
+        logger(__dirname, "Manager account");
         manager = await User.findOne({
             identifier: req.body.identifier,
             role: "Manager",
@@ -34,7 +35,7 @@ const authenticate = async (req: Request) => {
         const payload = {
             restaurantId: String(result._id),
             role: req.body.identifier ? "Manager" : "Owner"
-        }
+        };
 
         if (result.validated === "true") {
             const token = req.body.stayLogged
