@@ -11,14 +11,11 @@ const authenticate = async (req: Request) => {
     // Searching for account to connect
     const result = await Restaurant.findOne({ email: req.body.email });
 
-    // If wronf email
+    // If wrong email
     if (!result) throw new Error("Login or password incorrect, or unhautorized account");
 
     // If manager, search user subAccount
-    let manager: {
-    restaurantId: string;
-    password: string;
-  } | null = null;
+    let manager;
 
     if (req.body.identifier) {
         manager = await User.findOne({
@@ -34,18 +31,19 @@ const authenticate = async (req: Request) => {
     // Check if account found and paswword OK
     if (password && bcrypt.compareSync(req.body.password, password)) {
     // Check if account has been valdiated
+        const payload = {
+            restaurantId: String(result._id),
+            role: req.body.identifier ? "Manager" : "Owner"
+        }
+
         if (result.validated === "true") {
             const token = req.body.stayLogged
                 ? jwt.sign(
-                    {
-                        restaurantId: String(result._id),
-                    },
+                    payload,
                     String(process.env.TOKEN_KEY)
                 )
                 : jwt.sign(
-                    {
-                        restaurantId: String(result._id),
-                    },
+                    payload,
                     String(process.env.TOKEN_KEY),
                     { expiresIn: "2h" }
                 );
