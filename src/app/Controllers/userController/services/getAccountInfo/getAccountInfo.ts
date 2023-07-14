@@ -52,6 +52,7 @@ const getAccountInfo = async (req: Request) => {
             identifier: user.identifier,
             firstname: user.firstname,
             lastname: user.lastname,
+            role: user.role
         },
         restaurant: {
             name: query[0].name,
