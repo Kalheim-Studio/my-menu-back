@@ -187,6 +187,7 @@ describe("authenticate service test", () => {
 
         // User.findOne = jest.fn().mockResolvedValue({
         User.find = jest.fn().mockResolvedValue([{
+            identifier: "JohnDoe",
             password: hashedPwd,
             restaurantId: "64ac497ec46ef4d28a0801e9",
         }]);
@@ -220,7 +221,7 @@ describe("authenticate service test", () => {
             validated: "true",
         });
 
-        User.findOne = jest.fn().mockResolvedValue(null);
+        User.find = jest.fn().mockResolvedValue([]);
 
         let authToken;
         let error;

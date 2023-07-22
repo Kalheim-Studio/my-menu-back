@@ -17,7 +17,6 @@ jest.mock("../../Middlewares/checkData/checkData", () => ({
     checkData: jest.fn().mockImplementation((req: Request, res: Response, next: NextFunction) => next()),
 }));
 
-
 // Mocking User controller
 const statusCode = 200;
 const message = "Route OK";
