@@ -7,10 +7,16 @@ jest.mock("../../Middlewares/checkAuth/checkAuth", () => ({
     checkAuth: jest.fn().mockImplementation((req: Request, res: Response, next: NextFunction) => next()),
 }));
 
+// Mocking checkOwnerRole middleware
+jest.mock("../../Middlewares/checkOwnerRole/checkOwnerRole", () => ({
+    checkOwnerRole: jest.fn().mockImplementation((req: Request, res: Response, next: NextFunction) => next()),
+}));
+
 // Mocking checkData middleware
 jest.mock("../../Middlewares/checkData/checkData", () => ({
     checkData: jest.fn().mockImplementation((req: Request, res: Response, next: NextFunction) => next()),
 }));
+
 
 // Mocking User controller
 const statusCode = 200;

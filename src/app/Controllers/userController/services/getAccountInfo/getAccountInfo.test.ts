@@ -8,7 +8,8 @@ describe("getAccountInfo service test", () => {
     const req = { headers: {} } as Request;
     const authToken = jwt.sign(
         {
-            restaurantId: "restaurantId",
+            restaurantId: "64ac497ec46ef4d28a0801e9",
+            role: "Owner"
         },
         "secrettokenkey"
     );
@@ -20,7 +21,7 @@ describe("getAccountInfo service test", () => {
     /* #### TESTS #### */
     it("Should fail if there's no account", async () => {
     // Mocking database read functions
-        Restaurant.aggregate = jest.fn().mockResolvedValue([]);
+        Restaurant.aggregate = jest.fn().mockResolvedValueOnce([]);
         
         let result;
         let error;
@@ -36,9 +37,9 @@ describe("getAccountInfo service test", () => {
         expect((error as Error).message).toBe("No account has been found");
     });
 
-    it("Should get account info", async () => {
+    it("Should get owner account info", async () => {
     // Mocking database read functions
-        Restaurant.aggregate = jest.fn().mockResolvedValue([{
+        Restaurant.aggregate = jest.fn().mockResolvedValueOnce([{
             name: "name",
             siret: "thisASiret",
             address: "address",
@@ -64,14 +65,13 @@ describe("getAccountInfo service test", () => {
             error = err;
         }
 
-        console.log(result);
-
         expect(error).toBeUndefined();
         expect(result).toEqual({
-            owner: {
+            user: {
                 identifier: "identifier",
                 firstname: "firstname",
                 lastname: "lastname",
+                role: "Owner"
             },
             restaurant: {
                 name: "name",

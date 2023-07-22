@@ -14,6 +14,7 @@ type User = {
 
 const getAccountInfo = async (req: Request) => {
     logger(__dirname, "Get account info");
+    
     // Getting restaurantId from token
     const authToken = String(req.headers.authorization).replace("Bearer ", "");
     const { restaurantId, role } = jwt.decode(authToken) as AuthToken;
@@ -46,7 +47,7 @@ const getAccountInfo = async (req: Request) => {
         user = (query[0].results as User[]).filter(
             (userAccount) => userAccount.role === "Manager"
         )[parseInt(role.split("-")[1])];
-
+    
     return {
         user: {
             identifier: user.identifier,
