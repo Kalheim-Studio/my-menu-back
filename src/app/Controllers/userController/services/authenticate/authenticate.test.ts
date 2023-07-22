@@ -181,14 +181,16 @@ describe("authenticate service test", () => {
 
         // Mock database request
         Restaurant.findOne = jest.fn().mockResolvedValue({
-            _id: "01234",
+            _id: "64ac497ec46ef4d28a0801e9",
             validated: "true",
         });
 
-        User.findOne = jest.fn().mockResolvedValue({
+        // User.findOne = jest.fn().mockResolvedValue({
+        User.find = jest.fn().mockResolvedValue([{
+            identifier: "JohnDoe",
             password: hashedPwd,
-            restaurantId: "01234",
-        });
+            restaurantId: "64ac497ec46ef4d28a0801e9",
+        }]);
 
         let authToken;
         let error;
@@ -215,11 +217,11 @@ describe("authenticate service test", () => {
 
         // Mock database request
         Restaurant.findOne = jest.fn().mockResolvedValue({
-            _id: "01234",
+            _id: "64ac497ec46ef4d28a0801e9",
             validated: "true",
         });
 
-        User.findOne = jest.fn().mockResolvedValue(null);
+        User.find = jest.fn().mockResolvedValue([]);
 
         let authToken;
         let error;

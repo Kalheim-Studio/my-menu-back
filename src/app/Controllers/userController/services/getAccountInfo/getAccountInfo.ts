@@ -5,7 +5,7 @@ import { Restaurant } from "../../../../Models/Restaurant";
 import { logger } from "../../../../../Utils";
 import { AuthToken } from "../../../../Types/";
 
-type Owner = {
+type User = {
     role: string;
     identifier: string;
     firstname: string;
@@ -14,9 +14,10 @@ type Owner = {
 
 const getAccountInfo = async (req: Request) => {
     logger(__dirname, "Get account info");
+    
     // Getting restaurantId from token
     const authToken = String(req.headers.authorization).replace("Bearer ", "");
-    const { restaurantId } = jwt.decode(authToken) as AuthToken;
+    const { restaurantId, role } = jwt.decode(authToken) as AuthToken;
     
     // Get Restaurant and owner
     const query = await Restaurant.aggregate([
@@ -38,13 +39,21 @@ const getAccountInfo = async (req: Request) => {
     if(query.length === 0)
         throw new Error("No account has been found");
 
-    const owner = (query[0].results as Owner[]).filter((user) => user.role === "Owner")[0];
-
+    let user;
+    
+    if(role === "Owner")
+        user = (query[0].results as User[]).filter((userAccount) => userAccount.role === "Owner")[0];
+    else
+        user = (query[0].results as User[]).filter(
+            (userAccount) => userAccount.role === "Manager"
+        )[parseInt(role.split("-")[1])];
+    
     return {
-        owner: {
-            identifier: owner.identifier,
-            firstname: owner.firstname,
-            lastname: owner.lastname,
+        user: {
+            identifier: user.identifier,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            role: user.role
         },
         restaurant: {
             name: query[0].name,
