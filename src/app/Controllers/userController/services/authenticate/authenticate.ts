@@ -17,36 +17,30 @@ const authenticate = async (req: Request) => {
     let password = result.password;
 
     // If manager, search user subAccount
-    // let manager;
     let managers;
     let index;
 
-    if (req.body.identifier) {
+    if (req.body.role === "Manager") {
         logger(__dirname, "Manager account");
-        // manager = await User.findOne({
+        
         managers = await User.find({
-            // identifier: req.body.identifier,
             role: "Manager",
             restaurantId: result._id,
         });
-        // if (!manager) throw new Error("No manager account found");
 
         if (managers.length === 0) throw new Error("No manager account found");
         
         // Getting manager index
         index = managers?.findIndex(manager => manager.identifier === req.body.identifier);
         
-        // Changing password to manager password
+        // Changing password to check to manager password
         password = managers[index].password;
     }
-
-    // Getting which password to check
-    // const password = manager?.password ?? result.password;
 
     // Check if account found and paswword OK
     if (password && bcrypt.compareSync(req.body.password, password)) {
 
-        // Check if account has been valdiated
+        // Check if account has been validated
         if (result.validated === "true") {
             // token payload
             const payload = {

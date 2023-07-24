@@ -12,7 +12,7 @@ dotenv.config();
 // Create server
 const server = http.createServer(app);
 // Execution port environment variable
-const PORT = parseInt(process.env.PORT || "8080");
+const PORT = parseInt(String(process.env.PORT));
 
 // Server start
 server.listen(PORT);

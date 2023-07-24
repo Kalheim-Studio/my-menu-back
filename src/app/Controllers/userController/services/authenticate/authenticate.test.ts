@@ -173,6 +173,7 @@ describe("authenticate service test", () => {
             email: "john.doe@authentication.com",
             identifier: "JohnDoe",
             password: "Abcdefgh1234!",
+            role: "Manager",
             stayLogged: true,
         };
 
@@ -182,6 +183,7 @@ describe("authenticate service test", () => {
         // Mock database request
         Restaurant.findOne = jest.fn().mockResolvedValue({
             _id: "64ac497ec46ef4d28a0801e9",
+            password: "restauranthasHedPasword",
             validated: "true",
         });
 
@@ -212,6 +214,7 @@ describe("authenticate service test", () => {
             email: "john.doe@authentication.com",
             identifier: "JohnDoe",
             password: "Abcdefgh1234!",
+            role: "Manager",
             stayLogged: true,
         };
 
