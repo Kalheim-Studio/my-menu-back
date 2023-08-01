@@ -30,6 +30,7 @@ const restaurantSchema = new mongoose.Schema(
         table: [{
             identifier: { type: String, required: true },
             openend: { type: Boolean, default: false },
+            customerCode: Number,
             help: { type: Boolean, default: false },
         }],
         validated: { type: String, required: true },
